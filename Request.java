@@ -5,54 +5,55 @@ import java.util.Hashtable;
 
 public class Request{
 
-  private String requestLine;
+
   private String uri;
   private String httpVersion;
   private String verb;
-  private String test;
+  private String httpRequest;
   private String[] parsedTest;
-  private Hashtable<String,String> headers;
+  private Hashtable<String, String> headers;
   private StringBuffer messageBody;
+  private static final int HEADER_KEY = 0;
+  private static final int HEADER_VALUE= 1;
 
   public Request(){
 
   }
-  public Request(String test){
-  	this.test = test;
+  public Request(String httpRequest){
+    this.httpRequest = httpRequest;
   	try{
   	  parse();
   	}
   	catch( IOException ex ){
+  		//TODO implement 400 response handling
   		System.out.println( ex.toString() );
   	}
   }
 
   public void parse() throws IOException{
-  	BufferedReader reader = new BufferedReader( new StringReader( test ) );
+  	BufferedReader reader = new BufferedReader( new StringReader( httpRequest ) );
+  	String line;
 
-  	setRequestLine( reader.readLine() );
-  	parseRequestLine( this.requestLine );
+  	parseRequestLine( reader.readLine() );
 
-    String headerLine = reader.readLine();
-    while( headerLine.length() > 0){
-      System.out.println( "Header" + headerLine );
-      appendHeader( headerLine );
-      headerLine = reader.readLine();
+  	headers = new Hashtable<String, String>();
+    line = reader.readLine();
+    while( line != "\r\n" && line != null ){
+      addToHeaders( line );
+      line = reader.readLine();
     }
 
-    String bodyLine = reader.readLine();
-    while( bodyLine != null){
-    	appendBody( bodyLine );
-    	bodyLine = reader.readLine();
+    //TODO incorrect logic according to jrob 
+    //"protocol specifies additional headers to determine how
+    //to read the body which may not be string"
+    line = reader.readLine();
+    while( line != "\r\n" && line != null ){
+    	appendBody( line );
+    	line = reader.readLine();
     }
-  }
-  
-  private void setRequestLine( String requestLineSet ){
-  	this.requestLine = requestLineSet;
   }
 
   private void parseRequestLine(String requestLineParse){
-  	System.out.println(requestLineParse);
   	String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
   	setVerb( requestLineSubstrings[0] );
@@ -60,22 +61,23 @@ public class Request{
   	setHttpVersion( requestLineSubstrings[2] );
   }
 
-  private void appendHeader( String headerLine ){
-  	int indexOfColon = headerLine.indexOf( ":" );
-  	this.headers.put( headerLine.substring( 0, indexOfColon ) , headerLine.substring( indexOfColon+1, headerLine.length() ) );
+  private void addToHeaders( String headerLine ){
+  	String[] headerParts = headerLine.split(": ");  	
+  	this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
   }
 
+  //TODO "not correct treatment of body, leave as bytestream?"
   private void appendBody( String bodyLine ){
     this.messageBody.append( bodyLine ).append( "\r\n" );
   }
 
-  public void setVerb( String verb ){
+  private void setVerb( String verb ){
   	this.verb = verb;
   }
-  public void setUri( String uri ){
+  private void setUri( String uri ){
   	this.uri = uri;
   }
-  public void setHttpVersion( String httpVersion ){
+  private void setHttpVersion( String httpVersion ){
   	this.httpVersion = httpVersion;
   }
 
@@ -90,8 +92,13 @@ public class Request{
   }
 
 
-  public String toString(){
-  	return ( "Verb: " + this.verb + " uri: " + this.uri + 
-  	  " httpVersion: " + this.httpVersion );
+  public void print(){
+  	System.out.println( "Verb: " + this.verb + ", uri: " + this.uri + 
+  	  ", httpVersion: " + this.httpVersion );
+
+  	for( String key: headers.keySet() ){
+  	  String value = headers.get(key).toString();
+  	  System.out.println( "Key: " + key + ", Value: " + value);
+  	}
   }
 }
