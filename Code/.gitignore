@@ -3,6 +3,8 @@
 
 # configuration files #
 *.conf
+*.vscode
+
 
 # specs
 *.pdf
