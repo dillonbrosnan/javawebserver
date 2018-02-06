@@ -16,17 +16,15 @@ public abstract class ConfigurationReader {
       System.out.println(e);
     }
   }
-
-  public boolean hasMoreLines(){
-    boolean hasMoreLines = false;
-    hasMoreLines = checkLines.hasNextLine(); 
-    return hasMoreLines; 
+  
+  public boolean hasMoreLines() {
+    return checkLines.hasNextLine(); 
   }
 
-  public String nextLine () {
+  public String nextLine() {
     return checkLines.nextLine();
   }
 
-  public abstract void load ();
+  public abstract void load();
 
 }
