@@ -38,10 +38,12 @@ public class Htpassword extends ConfigurationReader {
     String[] tokens = credentials.split( ":" );
 
     // TODO: implement this
-    if( passwords.contains( tokens[0] ) ){
-      return true;
+    if( !passwords.contains( tokens[0] ) ){
+      return false;
     }
-    return false;
+    else{
+      return verifyPassword( tokens[0], tokens[1] );
+    }
     
   }
 
