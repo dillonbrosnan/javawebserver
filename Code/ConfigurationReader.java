@@ -4,28 +4,22 @@ import java.io.FileNotFoundException;
 
 public abstract class ConfigurationReader {
 
-  private File file;
+  public File file;
   private static Scanner checkLines;
 
   public ConfigurationReader ( String fileName ) {
     this.file = new File ( fileName );
+    try{
+      checkLines = new Scanner( file );
+    }
+    catch(FileNotFoundException e){
+      System.out.println(e);
+    }
   }
 
-  public boolean hasMoreLines () throws FileNotFoundException{
-
+  public boolean hasMoreLines(){
     boolean hasMoreLines = false;
-
-    try {   
-
-      checkLines = new Scanner ( file );
-      hasMoreLines = checkLines.hasNextLine();  
-      checkLines.close(); 
-
-    } catch ( FileNotFoundException e ) {
-
-      System.out.println( e );
-
-    }
+    hasMoreLines = checkLines.hasNextLine(); 
     return hasMoreLines; 
   }
 
