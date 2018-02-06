@@ -23,6 +23,10 @@ public class Server{
     mimetype.load();
     System.out.println( mimetype.lookup("ez") );
     
+
+    HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
+    httpdConf.load();
+    System.out.println( httpdConf.getDocumentRoot() );
   }
 
 
