@@ -1,5 +1,5 @@
 # compiled source #
-.class
+*.class
 
 # configuration files #
 *.conf
