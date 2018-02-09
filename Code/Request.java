@@ -2,6 +2,9 @@ import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Hashtable;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -16,6 +19,7 @@ public class Request{
   private String httpVersion;
   private String verb;
   private String httpRequest;
+  private InputStream httpRequestStream;
   private String[] parsedTest;
   private Hashtable<String, String> headers;
   private byte[] messageBody;
@@ -39,9 +43,9 @@ public class Request{
 
   public Request( InputStream httpRequestStream ) {
     //this.httpRequest = IOUtils.toString( httpRequestStream, StandardCharsets.UTF_8 );
+    this.httpRequestStream = httpRequestStream;
     
     try{
-      inputStreamToString( httpRequestStream );
       parse();
     }
     catch( IOException ex ){
@@ -50,34 +54,51 @@ public class Request{
     }
   }
   
-  private void inputStreamToString( InputStream httpRequestStream ) throws IOException {
-    try (Scanner scanner = new Scanner( httpRequestStream , StandardCharsets.UTF_8.name() ) ) {
-      this.httpRequest = scanner.useDelimiter( "\\A" ).next();
-    } 
+  // private void inputStreamToString( InputStream httpRequestStream ) throws IOException {
+  //   try (Scanner scanner = new Scanner( httpRequestStream , StandardCharsets.UTF_8.name() ) ) {
+  //     this.httpRequest = scanner.useDelimiter( "\\A" ).next();
+  //   } 
           
-  }
+  // }
 
   public void parse() throws IOException{
-    BufferedReader reader = new BufferedReader( new StringReader( httpRequest ) );
+    BufferedReader reader = new BufferedReader( new InputStreamReader( this.httpRequestStream, "UTF-8" ) );
     String line;
 
     parseRequestLine( reader.readLine() );
 
     headers = new Hashtable<String, String>();
     line = reader.readLine();
-    while( line.length() > 0 ){
+    while( !line.isEmpty() ){
       System.out.println(line);
       addToHeaders( line );
+      System.out.println(line);
       line = reader.readLine();
     }
 
     line = reader.readLine();
+
     messageBody = new byte[0];
     while( line != "\r\n" && line != null ){
       storeBody( line );
       line = reader.readLine();
     }
-  }
+    // ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    // int bytesRead = this.httpRequestStream.read();
+    // System.out.println(bytesRead);
+
+    // // int reads = this.httpRequestStream.available();
+    // // System.out.println(reads + "!!!@!@!@#!@");
+    // // while(reads != -1){
+    // //   baos.write(reads);
+    // //   reads = httpRequestStream.read();
+    // // }
+    // // byte[] test = baos.toByteArray();
+    // // System.out.println("!!!!!!!!!!!!! " + Arrays.toString(test));
+    // System.out.println(reader.toString());
+
+
+;  }
 
   private void parseRequestLine(String requestLineParse){
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
@@ -86,7 +107,7 @@ public class Request{
     setUri( requestLineSubstrings[1] );
     setHttpVersion( requestLineSubstrings[2] );
   }
-
+  //commas?
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
     this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );

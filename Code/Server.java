@@ -6,7 +6,7 @@ public class Server{
     // Request request = new Request("GET / http/1.1\r\nHost: net.tutsplus.com \r\n" +
     //   "Host2: net.tutsplus.com2\r\n\r\nhome=Cosby&favorite+flavor=flies\r\nhome=Cosby&favorite+flavor=flies\r\n");
     String s = "GET /cgi-bin/ http/1.1\r\nHost: net.tutsplus.com \r\n" +
-      "Host2: net.tutsplus.com2\r\n\r\nhome=Cosby&favorite+flavor=flies\r\nhome=Cosby&favorite+flavor=flies\r\n";
+      "Host2: net.tutsplus.com2\r\nContent-Length: 40\r\n\r\nhome=Cosby&favorite+flavor=flies\r\nhome=Cosby&favorite+flavor=flies2131\r\n";
       InputStream is = new ByteArrayInputStream( s.getBytes() );
       Request request = new Request( is );
     request.print();
@@ -27,6 +27,10 @@ public class Server{
     HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
     httpdConf.load();
     System.out.println( httpdConf.getDocumentRoot() );
+
+    Htaccess hta = new Htaccess("./Support/_.htaccess");
+    hta.load();
+    hta.print();
   }
 
 

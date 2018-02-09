@@ -26,5 +26,11 @@ public abstract class ConfigurationReader {
   }
 
   public abstract void load();
+  // public void load(){
+  //   while( hasMoreLines ){
+  //     parseLine( nextLine() );
+  //   }
+  // }
+  // // protected abstract void parseLine();
 
 }

@@ -24,3 +24,6 @@ public class MimeTypes extends ConfigurationReader{
     return this.types.get( extension );
   }
 }
+
+//key lhs
+//val rhs

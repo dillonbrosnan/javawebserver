@@ -1,5 +1,3 @@
-package server.configuration;
-
 import java.util.HashMap;
 import java.util.Base64;
 import java.nio.charset.Charset;
@@ -38,7 +36,7 @@ public class Htpassword extends ConfigurationReader {
     String[] tokens = credentials.split( ":" );
 
     // TODO: implement this
-    if( !passwords.contains( tokens[0] ) ){
+    if( !(this.passwords.containsKey( tokens[0] )) ){
       return false;
     }
     else{
@@ -70,5 +68,8 @@ public class Htpassword extends ConfigurationReader {
     } catch( Exception e ) {
       return "";
     }
+  }
+  public void load(){
+    
   }
 }
