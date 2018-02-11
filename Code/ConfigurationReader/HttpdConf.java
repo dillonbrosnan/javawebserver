@@ -48,4 +48,12 @@ public class HttpdConf extends ConfigurationReader {
   public String getLogFile() {
     return everythingElse.get( "LogFile" );
   }
+
+  public String getAlias( String pathToCheck ) {
+    return aliases.get( pathToCheck );
+  }
+
+  public String getScriptAlias( String pathToCheck ) {
+    return scriptAliases.get( pathToCheck );
+  }
 }

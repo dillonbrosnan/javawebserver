@@ -46,7 +46,7 @@ public class WebServer{
     try{
       ServerSocket socket = new ServerSocket( 8080 );
       Socket client = null;
-      Htaccess hta = new Htaccess("./Support/_.htaccess");
+      //Htaccess hta = new Htaccess("./Support/_.htaccess");
       while( true ){
         client = socket.accept();
         outputRequest( client );
