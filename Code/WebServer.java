@@ -7,6 +7,7 @@ import Logger.*;
 import java.io.*;
 import java.net.*;
 import java.net.URISyntaxException;
+import java.io.PrintWriter;
 
 public class WebServer{
   public static void main( String[] args ){
@@ -46,7 +47,7 @@ public class WebServer{
     try{
       ServerSocket socket = new ServerSocket( 8080 );
       Socket client = null;
-      Htaccess hta = new Htaccess("./Support/_.htaccess");
+      //Htaccess hta = new Htaccess("./Support/_.htaccess");
       while( true ){
         client = socket.accept();
         outputRequest( client );
@@ -61,7 +62,10 @@ public class WebServer{
   }
 
   protected static void outputRequest( Socket client ) throws IOException {
-
+    // System.out.println( client.getInputStream().toString() );
+    
     Request request = new Request( client.getInputStream() );
+    HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
+    request.print();
   }
 }
