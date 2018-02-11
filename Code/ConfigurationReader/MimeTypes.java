@@ -1,3 +1,5 @@
+package ConfigurationReader;
+
 import java.util.Hashtable;
 
 public class MimeTypes extends ConfigurationReader{

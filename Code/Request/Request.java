@@ -1,3 +1,5 @@
+package Request;
+
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
@@ -70,9 +72,7 @@ public class Request{
     headers = new Hashtable<String, String>();
     line = reader.readLine();
     while( !line.isEmpty() ){
-      System.out.println(line);
       addToHeaders( line );
-      System.out.println(line);
       line = reader.readLine();
     }
 

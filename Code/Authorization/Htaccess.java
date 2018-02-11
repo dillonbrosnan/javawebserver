@@ -1,4 +1,7 @@
+package Authorization;
+
 import java.io.IOException;
+import ConfigurationReader.*;
 
 public class Htaccess extends ConfigurationReader{
   private Htpassword userFile;
