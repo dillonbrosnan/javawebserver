@@ -1,7 +1,7 @@
 import ConfigurationReader.*;
 import Authorization.*;
 import Request.*;
-//import ResponseFactory.*;
+import ResponseFactory.*;
 import Logger.*;
 
 import java.io.*;
