@@ -27,6 +27,9 @@ public class Request{
   private byte[] messageBody;
   private static final int HEADER_KEY = 0;
   private static final int HEADER_VALUE= 1;
+  private static final String[] verbs = {
+    "GET", "HEAD", "POST", "PUT", "DELETE"
+  };
 
   public Request(){
 
@@ -44,9 +47,7 @@ public class Request{
   }
 
   public Request( InputStream httpRequestStream ) {
-    //this.httpRequest = IOUtils.toString( httpRequestStream, StandardCharsets.UTF_8 );
-    this.httpRequestStream = httpRequestStream;
-    
+    this.httpRequestStream = httpRequestStream;  
     try{
       parse();
     }
@@ -55,16 +56,8 @@ public class Request{
       System.out.println( ex.toString() );
     }
   }
-  
-  // private void inputStreamToString( InputStream httpRequestStream ) throws IOException {
-  //   try (Scanner scanner = new Scanner( httpRequestStream , StandardCharsets.UTF_8.name() ) ) {
-  //     this.httpRequest = scanner.useDelimiter( "\\A" ).next();
-  //   } 
-          
-  // }
-
   public void parse() throws IOException{
-    BufferedReader reader = new BufferedReader( new InputStreamReader( this.httpRequestStream, "UTF-8" ) );
+    BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
     String line;
 
     parseRequestLine( reader.readLine() );
@@ -75,35 +68,19 @@ public class Request{
       addToHeaders( line );
       line = reader.readLine();
     }
-
     line = reader.readLine();
-
-    messageBody = new byte[0];
-    while( line != "\r\n" && line != null ){
-      storeBody( line );
-      line = reader.readLine();
+    if ( hasBody() ){
+      storeBody();
     }
-    // ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    // int bytesRead = this.httpRequestStream.read();
-    // System.out.println(bytesRead);
-
-    // // int reads = this.httpRequestStream.available();
-    // // System.out.println(reads + "!!!@!@!@#!@");
-    // // while(reads != -1){
-    // //   baos.write(reads);
-    // //   reads = httpRequestStream.read();
-    // // }
-    // // byte[] test = baos.toByteArray();
-    // // System.out.println("!!!!!!!!!!!!! " + Arrays.toString(test));
-    // System.out.println(reader.toString());
-
-
-;  }
+  }
 
   private void parseRequestLine(String requestLineParse){
+    System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
-    setVerb( requestLineSubstrings[0] );
+    if( isVerb( requestLineSubstrings[0] ){
+      setVerb( requestLineSubstrings[0] );
+    }
     setUri( requestLineSubstrings[1] );
     setHttpVersion( requestLineSubstrings[2] );
   }
@@ -113,14 +90,21 @@ public class Request{
     this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
   }
 
-  private void storeBody( String bodyLine ){
-    byte[] bodyLineBytes = bodyLine.getBytes();
-    int totalLength = messageBody.length + bodyLineBytes.length;
-    byte[] destination = new byte[totalLength];
-    
-    System.arraycopy( messageBody, 0, destination, 0, messageBody.length );
-    System.arraycopy( bodyLineBytes, 0, destination, messageBody.length, bodyLineBytes.length );
-    messageBody = Arrays.copyOf( destination, totalLength);
+  private void storeBody(){
+    try{
+      int bodySize = Integer.parseInt( headers.get( "Content-Length" ) );
+      messageBody = new byte[bodySize];
+      httpRequestStream.read( messageBody, 0, bodySize );
+    }
+    catch( IOException e ){
+      System.out.println( e );
+    }
+  }
+  private boolean hasBody(){
+    return headers.containsKey( "Content-Length" );
+  }
+  private boolean isVerb( String verb ){
+    return Arrays.asList( verbs ).contains( verb ); 
   }
   private void setVerb( String verb ){
     this.verb = verb;
@@ -143,14 +127,15 @@ public class Request{
   }
 
   public void print(){
+    System.out.println( "REQUEST LINE: " );
     System.out.println( "Verb: " + this.verb + ", uri: " + this.uri + 
       ", httpVersion: " + this.httpVersion );
-
+    System.out.println( "HEADERS: ");
     for( String key: headers.keySet() ){
       String value = headers.get(key).toString();
       System.out.println( "Key: " + key + ", Value: " + value);
     }
-    String messageBodyString = new String( messageBody, Charset.forName("UTF-8") );
-    System.out.println( messageBodyString );
+    System.out.println( "BODYSIZE: " );
+    System.out.println(Arrays.toString(messageBody));
   }
 }
