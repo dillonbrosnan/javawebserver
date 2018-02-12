@@ -33,7 +33,7 @@ public class Resource{
   }
   //TODO: protected method
   protected boolean isProtected(){
-    return false;
+    return isProtected;
   }
 
   public String absolutePath() {
@@ -61,19 +61,18 @@ public class Resource{
           resolveUnmodUri();
         }      
     }
-
-    isFile = isFile( absolutePath );
+    if ( isDirectory ) {
+      appendDirIndex();
+    } 
   }
 
   private void resolveUnmodUri() {
     absolutePath = "";
-    absolutePath += config.getDocumentRoot() + this.uri;
+    absolutePath += config.getDocumentRoot() + this.uri.replaceFirst( "/", "" );
   }
 
-  private boolean isFile( String absolutePath ) {
-    if( isDirectory ) {
-      
-    }
+  private void appendDirIndex() {
+    absolutePath += config.getDirectoryIndex();
   }
 
   private boolean isAlias( String path ) {
@@ -87,6 +86,12 @@ public class Resource{
         absolutePath += "/";
       }
     }
+  }
+
+  private void findAccessFilePath() {
+    accessFilePath = absolutePath;
+
+    //fuck this shitttttt
   }
 
 }

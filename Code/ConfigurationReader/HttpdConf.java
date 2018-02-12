@@ -49,6 +49,14 @@ public class HttpdConf extends ConfigurationReader {
     return everythingElse.get( "LogFile" );
   }
 
+  public String getAccessFileName() {
+    return everythingElse.get( "AccessFileName" );
+  }
+  
+  public String getDirectoryIndex() {
+    return everythingElse.get( "DirectoryIndex" );
+  }
+
   public String getAlias( String pathToCheck ) {
     return aliases.get( pathToCheck );
   }
@@ -56,4 +64,5 @@ public class HttpdConf extends ConfigurationReader {
   public String getScriptAlias( String pathToCheck ) {
     return scriptAliases.get( pathToCheck );
   }
+
 }
