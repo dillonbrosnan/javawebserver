@@ -98,19 +98,26 @@ public class Resource{
     String docRootUriHtaccess;
     File accessFile;
 
-    for( int i = 0; i < uriTokens.length; i++ ){
-      docRootAppended += (uriTokens[i] + "/");
-      docRootUriHtaccess = docRootAppended + config.getAccessFileName();
-      accessFile = new File( docRootUriHtaccess );
-      isProtected = accessFile.exists();
-      if( isProtected ){
-        break;
+    if( this.uri.equals( "/" )) {
+      docRootAppended = config.getDocumentRoot() + config.getAccessFileName();
+    } else {
+      for( int i = 0; i < uriTokens.length && !isProtected; i++ ){
+        docRootAppended += (uriTokens[i] + "/");
+        docRootUriHtaccess = docRootAppended + config.getAccessFileName();
+        accessFile = new File( docRootUriHtaccess );
+        isProtected = accessFile.exists();
       }
     }
+
+    accessFile = new File( docRootAppended );
+    isProtected = accessFile.exists();  
+    
+
   }
 
   public void print(){
     System.out.println(isProtected());
+    System.out.println( isAlias(uri) );
   }
 
 }
