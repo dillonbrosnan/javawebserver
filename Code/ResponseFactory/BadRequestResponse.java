@@ -1,5 +1,8 @@
 package ResponseFactory;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+
 public class BadRequestResponse extends Response{
   public BadRequestResponse( Resource resource ){
     super( resource );
@@ -9,7 +12,7 @@ public class BadRequestResponse extends Response{
   public void send( OutputStream out ) throws IOException{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 
-    String body = "400"
+    String body = "400";
     this.sendAlwaysPhrase( output );
     this.sendGenericHeader( output, "Content-Length", String.valueOf( body.length() ) );
     this.sendGenericHeader( output, "Connection", "Closed" );

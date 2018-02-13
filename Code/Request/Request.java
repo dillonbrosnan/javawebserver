@@ -38,13 +38,13 @@ public class Request{
 
   public Request( String httpRequest ){
     this.httpRequest = httpRequest;
-    try{
-      parse();
-    }
-    catch( IOException ex ){
-      //TODO implement 400 response handling
-      System.out.println( ex.toString() );
-    }
+    // try{
+    //   parse();
+    // }
+    // catch( IOException ex ){
+    //   //TODO implement 400 response handling
+    //   System.out.println( ex.toString() );
+    // }
   }
 
   public Request( InputStream httpRequestStream ) {
@@ -61,12 +61,8 @@ public class Request{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
     String line;
 
-    try{
-      parseRequestLine( reader.readLine() );
-    }
-    catch( BadRequestException ){
-
-    }
+    parseRequestLine( reader.readLine() );
+    
     headers = new Hashtable<String, String>();
     line = reader.readLine();
     while( !line.isEmpty() ){

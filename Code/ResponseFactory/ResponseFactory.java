@@ -1,15 +1,21 @@
 package ResponseFactory;
 
-public class ResponseFactory {
-  public ResponseFactory() {
+import Request.*;
+import Exceptions.*;
 
+public class ResponseFactory {
+  public static Response getResponse( Request request, Resource resource ){
+    Response response = null;
+
+    response = new Response( request, resource );
   }
+
   public static Response getResponse( Request request, Resource resource, ServerException exception ){
     
     Response response = null;
 
     if( exception instanceof BadRequestException ){
-      response = new BadRequestException( resource );
+      response = new BadRequestResponse( resource );
     }
     return response;
   }

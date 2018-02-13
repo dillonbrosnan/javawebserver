@@ -1,15 +1,18 @@
 package ResponseFactory;
 
+import Request.*;
+
 import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
-import Request.*;
+import java.io.OutputStream;
+
 public abstract class Response {
 
   public int code;
-  public String httpVersion = "HTTP/1.1"
-  public String server = "TeamDoubleDServer"
-  public String CRLF = "\r\n"
+  public String httpVersion = "HTTP/1.1";
+  public String server = "TeamDoubleDServer";
+  public String CRLF = "\r\n";
   public String reasonPhrase;
   public int statusCode;
   public byte[] body;
