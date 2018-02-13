@@ -18,6 +18,7 @@ public class HttpdConf extends ConfigurationReader {
   public void load() {
     while( hasMoreLines() ) {
       line = this.nextLine();
+      line = line.replace( "\"", "");
       this.configuration = line.split( " " );
       storeValues();
     }      

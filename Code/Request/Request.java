@@ -78,7 +78,7 @@ public class Request{
     System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
-    if( isVerb( requestLineSubstrings[0] ){
+    if( isVerb( requestLineSubstrings[0] ) ){
       setVerb( requestLineSubstrings[0] );
     }
     setUri( requestLineSubstrings[1] );

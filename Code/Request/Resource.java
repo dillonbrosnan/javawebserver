@@ -1,7 +1,9 @@
 package Request;
 
+import ConfigurationReader.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.io.File;
 
 public class Resource{
   private HttpdConf config;
@@ -22,7 +24,7 @@ public class Resource{
     isScript = false;
     isProtected = false;
     this.findAbsolutePath();
-    this.findAccessFilePath();
+    this.checkAccessExists();
   }
   
   public boolean isScript(){
@@ -80,18 +82,35 @@ public class Resource{
   }
 
   private String restOfPath( String[] uriSplit ) {
-    for(int nextToken = 1; nextToken < uriSplit.length(); nextToken++ ) {
-      absolutePath += uriSplit[nextToken];
-      if(nextToken == uriSplit.length() - 1 || isDirectory ) {
-        absolutePath += "/";
+    String tempAbsolutePath = "";
+    for(int nextToken = 1; nextToken < uriSplit.length; nextToken++ ) {
+      tempAbsolutePath += uriSplit[nextToken];
+      if(nextToken == uriSplit.length - 1 || isDirectory ) {
+        tempAbsolutePath += "/";
+      }
+    }
+    return tempAbsolutePath;
+  }
+  private void checkAccessExists() {
+    accessFilePath = absolutePath;
+    String[] uriTokens = this.uri.split("/");
+    String docRootAppended = config.getDocumentRoot();
+    String docRootUriHtaccess;
+    File accessFile;
+
+    for( int i = 0; i < uriTokens.length; i++ ){
+      docRootAppended += (uriTokens[i] + "/");
+      docRootUriHtaccess = docRootAppended + config.getAccessFileName();
+      accessFile = new File( docRootUriHtaccess );
+      isProtected = accessFile.exists();
+      if( isProtected ){
+        break;
       }
     }
   }
 
-  private void findAccessFilePath() {
-    accessFilePath = absolutePath;
-
-    //fuck this shitttttt
+  public void print(){
+    System.out.println(isProtected());
   }
 
 }

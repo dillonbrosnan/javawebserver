@@ -66,6 +66,9 @@ public class WebServer{
     
     Request request = new Request( client.getInputStream() );
     HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
+    Resource rsource = new Resource(request.getUri(), httpdConf);
+
     request.print();
+    rsource.print();
   }
 }
