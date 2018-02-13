@@ -7,9 +7,10 @@ import java.io.FileNotFoundException;
 public abstract class ConfigurationReader {
 
   public File file;
-  private static Scanner checkLines;
+  private Scanner checkLines;
 
   public ConfigurationReader ( String fileName ) {
+    System.out.println("File name in ConfigurationReader: " + fileName);
     this.file = new File ( fileName );
     try{
       checkLines = new Scanner( file );

@@ -1,6 +1,7 @@
 package ConfigurationReader;
 
 import java.util.Hashtable;
+import java.util.Arrays;
 
 public class MimeTypes extends ConfigurationReader{
   private Hashtable<String,String> types;
@@ -16,6 +17,7 @@ public class MimeTypes extends ConfigurationReader{
     while( this.hasMoreLines() ){
       if( !( ( mimeLine = this.nextLine() ).contains("#") ) ){
         String mimeParts[] = mimeLine.split( "\\s+" );
+        System.out.println("Line in MimeTypes: " + Arrays.toString(mimeParts));
         for( int i = 1; i < mimeParts.length; i++ ){
           this.types.put( mimeParts[i], mimeParts[MIME_VALUE] );
         }

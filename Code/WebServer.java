@@ -3,6 +3,8 @@ import Authorization.*;
 import Request.*;
 import ResponseFactory.*;
 import Logger.*;
+import Worker.*;
+import Exceptions.*;
 
 import java.io.*;
 import java.net.*;
@@ -10,6 +12,11 @@ import java.net.URISyntaxException;
 import java.io.PrintWriter;
 
 public class WebServer{
+  private static final String CONF_PATH = "./conf/httpd.conf";
+  private static final String MIME_PATH = "./conf/mime.types";
+  private static HttpdConf httpdConf;
+  private static MimeTypes mimeTypes;
+
   public static void main( String[] args ){
     // // Request request = new Request("GET / http/1.1\r\nHost: net.tutsplus.com \r\n" +
     // //   "Host2: net.tutsplus.com2\r\n\r\nhome=Cosby&favorite+flavor=flies\r\nhome=Cosby&favorite+flavor=flies\r\n");
@@ -40,20 +47,30 @@ public class WebServer{
     // hta.load();
     // hta.print();
     start();
+
   }
 
 
   public static void start(){
+    System.out.println("conf path: " + CONF_PATH);
+
+    httpdConf = new HttpdConf( CONF_PATH );
+    mimeTypes = new MimeTypes( MIME_PATH );
+    mimeTypes.load();
+    httpdConf.load();
     try{
-      ServerSocket socket = new ServerSocket( 8080 );
+      ServerSocket socket = new ServerSocket( Integer.parseInt(httpdConf.getPort()) );
       Socket client = null;
+      Thread worker = null;
       //Htaccess hta = new Htaccess("./Support/_.htaccess");
       while( true ){
         client = socket.accept();
-        outputRequest( client );
+        worker = new Worker( client, httpdConf, mimeTypes );
+        worker.start();
+        //outputRequest( client );
         
         // TODO: Response
-        client.close();
+        //client.close();
       }
     }
     catch(IOException e){
@@ -61,14 +78,14 @@ public class WebServer{
     }
   }
 
-  protected static void outputRequest( Socket client ) throws IOException {
-    // System.out.println( client.getInputStream().toString() );
+  // protected static void outputRequest( Socket client ) throws IOException {
+  //   // System.out.println( client.getInputStream().toString() );
     
-    Request request = new Request( client.getInputStream() );
-    HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
-    Resource rsource = new Resource(request.getUri(), httpdConf);
+  //   Request request = new Request( client.getInputStream() );
+  //   HttpdConf httpdConf =  new HttpdConf("./conf/httpd.conf");
+  //   Resource rsource = new Resource(request.getUri(), httpdConf);
 
-    request.print();
-    rsource.print();
-  }
+  //   request.print();
+  //   rsource.print();
+  // }
 }

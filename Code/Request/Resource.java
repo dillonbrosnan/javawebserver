@@ -1,4 +1,5 @@
 package Request;
+import Exceptions.*;
 
 import ConfigurationReader.*;
 import java.net.URI;
@@ -6,7 +7,8 @@ import java.net.URISyntaxException;
 import java.io.File;
 
 public class Resource{
-  private HttpdConf config;
+  private HttpdConf httpdConf;
+  private MimeTypes mime;
   private String uri;
   private String absolutePath;
   private String accessFilePath;
@@ -17,16 +19,23 @@ public class Resource{
   private boolean isAlias;
   
 
-  public Resource( String uri, HttpdConf config ){
+  public Resource( String uri, HttpdConf httpdConf, MimeTypes mime ){
     this.uri = uri;
-    this.config = config;
+    this.httpdConf = httpdConf;
+    this.mime = mime;
     isFile = false;
     isScript = false;
     isProtected = false;
     this.findAbsolutePath();
     this.checkAccessExists();
   }
-  
+  public HttpdConf getConfiguration() {
+    return this.httpdConf;
+  }
+
+  public MimeTypes getMimeTypes() {
+    return this.mime;
+  }
   public boolean isScript(){
     if( this.uri.contains( "cgi-bin" ) ){
       isScript = true;
@@ -50,14 +59,14 @@ public class Resource{
     isDirectory = this.uri.endsWith( "/" );
 
     if( uri.equals( "/" )) {
-      absolutePath = config.getDocumentRoot();
+      absolutePath = httpdConf.getDocumentRoot();
     } else {
         temporary += uriSplit[0] + "/";
         if( isAlias( temporary )) {
-          absolutePath = config.getAlias( temporary ) + restOfPath( uriSplit );
+          absolutePath = httpdConf.getAlias( temporary ) + restOfPath( uriSplit );
           this.isAlias = true;
-        } else if( config.getScriptAlias( temporary ) != null ) {
-          absolutePath = config.getScriptAlias( temporary ) + restOfPath( uriSplit );
+        } else if( httpdConf.getScriptAlias( temporary ) != null ) {
+          absolutePath = httpdConf.getScriptAlias( temporary ) + restOfPath( uriSplit );
           this.isScript = true;
         } else {
           resolveUnmodUri();
@@ -66,19 +75,25 @@ public class Resource{
     if ( isDirectory ) {
       appendDirIndex();
     } 
-  }
+  } //TODO: check file exists (no: throw 404)
+  // protected void fileExists(){
+  //   File fn = new File( this.absolutePath() );
+  //   if( !fn.exists() ){
+  //     throw new FileNotFoundException();
+  //   }
+  // }
 
   private void resolveUnmodUri() {
     absolutePath = "";
-    absolutePath += config.getDocumentRoot() + this.uri.replaceFirst( "/", "" );
+    absolutePath += httpdConf.getDocumentRoot() + this.uri.replaceFirst( "/", "" );
   }
 
   private void appendDirIndex() {
-    absolutePath += config.getDirectoryIndex();
+    absolutePath += httpdConf.getDirectoryIndex();
   }
 
   private boolean isAlias( String path ) {
-    return config.getAlias( path ) != null;
+    return httpdConf.getAlias( path ) != null;
   }
 
   private String restOfPath( String[] uriSplit ) {
@@ -94,24 +109,23 @@ public class Resource{
   private void checkAccessExists() {
     accessFilePath = absolutePath;
     String[] uriTokens = this.uri.split("/");
-    String docRootAppended = config.getDocumentRoot();
+    String docRootAppended = httpdConf.getDocumentRoot();
     String docRootUriHtaccess;
     File accessFile;
 
     if( this.uri.equals( "/" )) {
-      docRootAppended = config.getDocumentRoot() + config.getAccessFileName();
+      docRootAppended = httpdConf.getDocumentRoot() + httpdConf.getAccessFileName();
     } else {
       for( int i = 0; i < uriTokens.length && !isProtected; i++ ){
         docRootAppended += (uriTokens[i] + "/");
-        docRootUriHtaccess = docRootAppended + config.getAccessFileName();
+        docRootUriHtaccess = docRootAppended + httpdConf.getAccessFileName();
         accessFile = new File( docRootUriHtaccess );
         isProtected = accessFile.exists();
       }
     }
 
     accessFile = new File( docRootAppended );
-    isProtected = accessFile.exists();  
-    
+    isProtected = accessFile.exists();     
 
   }
 
