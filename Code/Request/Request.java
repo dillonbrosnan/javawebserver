@@ -1,5 +1,6 @@
 package Request;
-
+import Exceptions.*;
+//TODO: THROW 400 BAD REQUEST
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
@@ -48,20 +49,24 @@ public class Request{
 
   public Request( InputStream httpRequestStream ) {
     this.httpRequestStream = httpRequestStream;  
-    try{
-      parse();
-    }
-    catch( IOException ex ){
-      //TODO implement 400 response handling
-      System.out.println( ex.toString() );
-    }
+    // try{
+    //   parse();
+    // }
+    // catch( IOException ex ){
+    //   //TODO implement 400 response handling
+    //   System.out.println( ex.toString() );
+    // }
   }
-  public void parse() throws IOException{
+  public void parse() throws IOException, ServerException{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
     String line;
 
-    parseRequestLine( reader.readLine() );
+    try{
+      parseRequestLine( reader.readLine() );
+    }
+    catch( BadRequestException ){
 
+    }
     headers = new Hashtable<String, String>();
     line = reader.readLine();
     while( !line.isEmpty() ){
@@ -74,17 +79,19 @@ public class Request{
     }
   }
 
-  private void parseRequestLine(String requestLineParse){
+  private void parseRequestLine( String requestLineParse ) throws BadRequestException{
     System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
     if( isVerb( requestLineSubstrings[0] ) ){
       setVerb( requestLineSubstrings[0] );
     }
+    else{
+      throw new BadRequestException();
+    }
     setUri( requestLineSubstrings[1] );
     setHttpVersion( requestLineSubstrings[2] );
   }
-  //commas?
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
     this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );

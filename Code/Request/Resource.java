@@ -1,4 +1,5 @@
 package Request;
+import Exceptions.*;
 
 import ConfigurationReader.*;
 import java.net.URI;
@@ -66,6 +67,12 @@ public class Resource{
     if ( isDirectory ) {
       appendDirIndex();
     } 
+  } //TODO: check file exists (no: throw 404)
+  protected void fileExists(){
+    File fn = new File( this.absolutePath() );
+    if( !fn.exists() ){
+      throw new FileNotFoundException();
+    }
   }
 
   private void resolveUnmodUri() {

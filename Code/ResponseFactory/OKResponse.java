@@ -5,13 +5,15 @@ import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import Request.*;
 
-public class OK extends Response{
-  public OK ( Resource resource ){
+public class OKResponse extends Response{
+  public OKResponse ( Resource resource ){
     super( resource );
-    this.code = 200;
+    this.statusCode = 200;
     this.reasonPhrase = "OK";
   }
-  public send( OutputStream out ) throws IOException{
+  public void send( OutputStream out ) throws IOException{
     BufferedWriter output  = new BufferedWriter( new OutputStreamWriter( out ) );
+    
+    
   }
 }
