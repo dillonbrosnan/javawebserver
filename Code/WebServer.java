@@ -4,6 +4,7 @@ import Request.*;
 import ResponseFactory.*;
 import Logger.*;
 import Worker.*;
+import Exceptions.*;
 
 import java.io.*;
 import java.net.*;
@@ -45,16 +46,18 @@ public class WebServer{
     // Htaccess hta = new Htaccess("./Support/_.htaccess");
     // hta.load();
     // hta.print();
-
-    httpdConf = new HttpdConf( CONF_PATH );
-    mimeTypes = new MimeTypes( MIME_PATH );
-    httpdConf.load();
-    mimeTypes.load();
     start();
+
   }
 
 
   public static void start(){
+    System.out.println("conf path: " + CONF_PATH);
+
+    httpdConf = new HttpdConf( CONF_PATH );
+    mimeTypes = new MimeTypes( MIME_PATH );
+    mimeTypes.load();
+    httpdConf.load();
     try{
       ServerSocket socket = new ServerSocket( Integer.parseInt(httpdConf.getPort()) );
       Socket client = null;

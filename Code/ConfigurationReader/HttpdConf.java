@@ -13,12 +13,14 @@ public class HttpdConf extends ConfigurationReader {
 
   public HttpdConf( String fileName ) {
     super( fileName );
+        System.out.println("File Name: " + fileName);
     //this.load();
   }
 
   public void load() {
     while( hasMoreLines() ) {
       line = this.nextLine();
+      System.out.println("Line in load() HttpdConf.java: " + line);
       line = line.replace( "\"", "" );
       this.configuration = line.split( " " );
       storeValues();
@@ -31,7 +33,6 @@ public class HttpdConf extends ConfigurationReader {
     } else if( this.configuration[CONF_KEY] == "Alias") {
       aliases.put( this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE] );
     } else {
-      System.out.println( this.configuration[CONF_KEY]);
       everythingElse.put( this.configuration[CONF_KEY], this.configuration[CONF_VALUE] );
     } 
   }

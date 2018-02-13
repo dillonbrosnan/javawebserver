@@ -22,7 +22,7 @@ public class Worker extends Thread {
 
 
   public Worker( Socket socket, HttpdConf httpdConf, MimeTypes mime ){
-    client = socket;
+    this.client = socket;
     this.httpdConf = httpdConf;
     this.mime = mime;
   }

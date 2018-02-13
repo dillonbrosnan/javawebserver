@@ -6,8 +6,8 @@ import Exceptions.*;
 public class ResponseFactory {
   public static Response getResponse( Request request, Resource resource ){
     Response response = null;
-
-    response = new Response( request, resource );
+    return response;
+    // response = new Response( request, resource );
   }
 
   public static Response getResponse( Request request, Resource resource, ServerException exception ){

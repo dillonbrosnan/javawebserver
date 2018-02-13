@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
 import java.io.OutputStream;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public abstract class Response {
 
@@ -31,12 +34,12 @@ public abstract class Response {
     sendDate( out );
     sendServer( out );
   }
-  protected void sendStatus( BufferedWriter out ){
+  protected void sendStatus( BufferedWriter out ) throws IOException{
     String statusString = httpVersion + " " + statusCode + " " + reasonPhrase + CRLF;
     out.write( statusString );
     out.flush();
   }
-  protected void sendDate( BufferedWriter out ){
+  protected void sendDate( BufferedWriter out ) throws IOException{
     DateFormat dateFormat = new SimpleDateFormat( "yyyy/MM/DD HH:mm:ss" );
     Date date = new Date();
     String dateString = "Date: " + dateFormat.format( date ) + CRLF;
@@ -44,13 +47,13 @@ public abstract class Response {
     out.write( dateString );
     out.flush();
   }
-  protected void sendServer( BufferedWriter out ){
+  protected void sendServer( BufferedWriter out ) throws IOException{
     String serverString = "Server: " + server + CRLF;
 
     out.write( serverString );
     out.flush();
   }
-  protected void sendGenericHeader( BufferedWriter out, String header, String value ){
+  protected void sendGenericHeader( BufferedWriter out, String header, String value ) throws IOException{
     String genericHeader = header + ": " + value + CRLF;
 
     out.write(genericHeader);

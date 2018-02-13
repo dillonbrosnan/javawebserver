@@ -3,7 +3,7 @@ package Exceptions;
 import java.lang.Exception;
 
 public class ServerException extends Exception{
-  int StatusCode;
+  int statusCode;
 
   public ServerException( int statusCode, String reasonPhranse ){
     super( reasonPhranse );

@@ -30,11 +30,11 @@ public class Resource{
     this.checkAccessExists();
   }
   public HttpdConf getConfiguration() {
-    return httpdConf;
+    return this.httpdConf;
   }
 
   public MimeTypes getMimeTypes() {
-    return mime;
+    return this.mime;
   }
   public boolean isScript(){
     if( this.uri.contains( "cgi-bin" ) ){

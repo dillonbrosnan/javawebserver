@@ -1,0 +1,15 @@
+./ResponseFactory/Response.java
+./ResponseFactory/ResponseFactory.java
+./ResponseFactory/BadRequestResponse.java
+./Request/Resource.java
+./Request/Request.java
+./Authorization/Htpassword.java
+./Authorization/Htaccess.java
+./ConfigurationReader/ConfigurationReader.java
+./ConfigurationReader/MimeTypes.java
+./ConfigurationReader/HttpdConf.java
+./Exceptions/ServerException.java
+./Exceptions/BadRequestException.java
+./Logger/Logger.java
+./WebServer.java
+./Worker/Worker.java
