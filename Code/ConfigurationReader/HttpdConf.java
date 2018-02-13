@@ -13,11 +13,13 @@ public class HttpdConf extends ConfigurationReader {
 
   public HttpdConf( String fileName ) {
     super( fileName );
+    this.load();
   }
 
   public void load() {
     while( hasMoreLines() ) {
       line = this.nextLine();
+      line = line.replace( "\"", "" );
       this.configuration = line.split( " " );
       storeValues();
     }      
@@ -25,11 +27,11 @@ public class HttpdConf extends ConfigurationReader {
 
   private void storeValues() {
     if( this.configuration[CONF_KEY].contains( "ScriptAlias" )) {
-        scriptAliases.put(this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE]);
+      scriptAliases.put(this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE]);
     } else if( this.configuration[CONF_KEY] == "Alias") {
-        aliases.put( this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE] );
+      aliases.put( this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE] );
     } else {
-        everythingElse.put( this.configuration[CONF_KEY], this.configuration[CONF_VALUE] );
+      everythingElse.put( this.configuration[CONF_KEY], this.configuration[CONF_VALUE] );
     } 
   }
 
@@ -48,4 +50,21 @@ public class HttpdConf extends ConfigurationReader {
   public String getLogFile() {
     return everythingElse.get( "LogFile" );
   }
+
+  public String getAccessFileName() {
+    return everythingElse.get( "AccessFileName" );
+  }
+  
+  public String getDirectoryIndex() {
+    return everythingElse.get( "DirectoryIndex" );
+  }
+
+  public String getAlias( String pathToCheck ) {
+    return aliases.get( pathToCheck );
+  }
+
+  public String getScriptAlias( String pathToCheck ) {
+    return scriptAliases.get( pathToCheck );
+  }
+
 }
