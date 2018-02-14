@@ -68,5 +68,8 @@ public class HttpdConf extends ConfigurationReader {
   public String getScriptAlias( String pathToCheck ) {
     return scriptAliases.get( pathToCheck );
   }
+  public boolean scriptAliasesEmpty(){
+    return this.scriptAliases.isEmpty();
+  }
 
 }

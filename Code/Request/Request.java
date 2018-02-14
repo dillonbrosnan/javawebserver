@@ -59,7 +59,7 @@ public class Request{
     //   System.out.println( ex.toString() );
     // }
   }
-  public void parse() throws IOException, ServerException{
+  public void parse() throws IOException, BadRequestException{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
     String line;
 
@@ -92,9 +92,9 @@ public class Request{
   }
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
-    if(headParts[HEADER_KEY].equals("Authorization")) {
+    if(headerParts[HEADER_KEY].equals("Authorization")) {
       String[] authSplit = headerParts[HEADER_VALUE].split( " " );
-      this.headers.put( headParts[HEADER_KEY], authSplit[AUTH_VALUE] );
+      this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
     }
     else{
       this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
@@ -139,6 +139,9 @@ public class Request{
 
   public String getHeader( String header ) {
     return headers.get( header );
+  }
+  public boolean headerKeyExists( String key ){
+    return headers.containsKey( key );
   }
 
   public void print(){

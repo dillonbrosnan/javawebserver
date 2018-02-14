@@ -2,6 +2,9 @@ package ResponseFactory;
 
 import Request.*;
 import Exceptions.*;
+import Authorization.*;
+
+import java.io.File;
 
 public class ResponseFactory {
   // public static Response getResponse( Request request, Resource resource ){
@@ -23,13 +26,13 @@ public class ResponseFactory {
   //   return response;
   // }
   public static Response getResponse( Request request, Resource resource ){
-    Reponse response = null;
+    Response response = null;
     if( resource.isProtected() ){
       Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
-      if( !request.headers.containsKey("Authorization") ) {
+      if( !request.headerKeyExists( "Authorization" ) ) {
         return new UnauthorizedResponse( resource );
       }
-      else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) {
+      else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) ) {
         return new ForbiddenResponse( resource );
       } 
     }
@@ -37,6 +40,7 @@ public class ResponseFactory {
     if( !file.exists() ){
       return new FileNotFoundResponse( resource );
     }
+    return response;
   }
   
   // isProtected(){

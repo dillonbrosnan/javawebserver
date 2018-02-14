@@ -8,7 +8,6 @@ public class Htaccess extends ConfigurationReader{
   private String authType;
   private String authName;
   private String require;
-  private HashMap<String,Boolean> allUsers;
    //htp object?
 
   public Htaccess (String fileName){
@@ -56,9 +55,6 @@ public class Htaccess extends ConfigurationReader{
       returnName += " " + authNameLine[i];
     }
     return returnName = returnName.replace( "\"", "" );
-  }
-  public String getAuthType(){
-    return this.authType();
   }
 
 }
