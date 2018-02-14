@@ -1,6 +1,7 @@
 package Authorization;
 
 import ConfigurationReader.*;
+import Exceptions.*;
 import java.util.HashMap;
 import java.util.Base64;
 import java.nio.charset.Charset;
@@ -56,7 +57,7 @@ public class Htpassword extends ConfigurationReader {
     if( passwords.get( username ) == encryptedPassword ){
       return true;
     }
-    return false;
+    return false;                         
   }
 
   private String encryptClearPassword( String password ) {

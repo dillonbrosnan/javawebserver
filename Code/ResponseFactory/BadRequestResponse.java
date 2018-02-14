@@ -14,10 +14,11 @@ public class BadRequestResponse extends Response{
     this.reasonPhrase = "Bad Request";
   }
   public void send( OutputStream out ) throws IOException{
-    BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
-
     String body = "<html><head><title>400 Bad Request</title></head><body>" 
       + "<h1>400 - Bad Request</h1></body></html>";
+    BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
+
+    
     this.sendAlwaysPhrase( output );
     this.sendGenericHeader( output, "Content-Length", String.valueOf( body.length() ) );
     this.sendGenericHeader( output, "Connection", "Closed" );

@@ -4,20 +4,39 @@ import Request.*;
 import Exceptions.*;
 
 public class ResponseFactory {
-  public static Response getResponse( Request request, Resource resource ){
-    Response response = null;
-    return response;
-    // response = new Response( request, resource );
-  }
+  // public static Response getResponse( Request request, Resource resource ){
+  //   Response response = null;
+  //   return response;
+  //   // response = new Response( request, resource );
+  // }
 
-  public static Response getResponse( Request request, Resource resource, ServerException exception ){
+  // public static Response getResponse( Request request, Resource resource, ServerException exception ){
     
-    Response response = null;
+  //   Response response = null;
 
-    if( exception instanceof BadRequestException ){
-      response = new BadRequestResponse( resource );
+  //   if( exception instanceof BadRequestException ){
+  //     response = new BadRequestResponse( resource );
+  //   }
+  //   // else if( exception instanceof UnauthorizedException ){
+  //   //   response = new UnauthorizedResponse( resource );
+  //   // }
+  //   return response;
+  // }
+  public static Response getResponse( Request request, Resource resource ){
+    Reponse response = null;
+    if( resource.isProtected() ){
+      Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
+      if( !request.headers.containsKey("Authorization") ) {
+        return new UnauthorizedResponse( resource );
+      }
+      else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) {
+        return new ForbiddenResponse( resource );
+      } 
     }
-    return response;
+    File file = new File( resource.absolutePath() );
+    if( !file.exists() ){
+      return new FileNotFoundResponse( resource );
+    }
   }
   
   // isProtected(){

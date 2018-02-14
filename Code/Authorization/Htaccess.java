@@ -7,7 +7,9 @@ public class Htaccess extends ConfigurationReader{
   private Htpassword userFile;
   private String authType;
   private String authName;
-  private String require; //htp object?
+  private String require;
+  private HashMap<String,Boolean> allUsers;
+   //htp object?
 
   public Htaccess (String fileName){
     super(fileName);
@@ -16,7 +18,7 @@ public class Htaccess extends ConfigurationReader{
   public void load(){
     String[] fileLine = this.nextLine().split( "\\s+" );
     try{
-          this.userFile = new Htpassword( fileLine[1] );
+      this.userFile = new Htpassword( fileLine[1] );
     }
     catch(IOException e){
       System.out.println(e);
@@ -26,14 +28,19 @@ public class Htaccess extends ConfigurationReader{
     this.authType = authTypeLine[1];
 
     this.authName = getAuthName( this.nextLine() );
+    //IS I CHALLENGE YOU 3 seperate users or 1 user 
 
     String[] requireLine = this.nextLine().split( "\\s+" );
     this.require = requireLine[1];
   }
 
-  public boolean isAuthorized( String authName ){
-    return this.userFile.isAuthorized( authName );    
+  public boolean isAuthorized( String authInfo ){
+    return this.userFile.isAuthorized( authInfo );    
   }
+  // public boolean isValid( String authName ){
+  //   String userNamePassword = Htpassword.decode( authName );
+  //   String userNamePasswordTokens[] = 
+  // }
 
   public void print(){
     System.out.println("authType: " + this.authType);
@@ -50,4 +57,8 @@ public class Htaccess extends ConfigurationReader{
     }
     return returnName = returnName.replace( "\"", "" );
   }
+  public String getAuthType(){
+    return this.authType();
+  }
+
 }

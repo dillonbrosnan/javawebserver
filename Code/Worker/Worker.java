@@ -33,8 +33,8 @@ public class Worker extends Thread {
       request.parse();
       resource = new Resource( request.getUri(), httpdConf, mime);
       response = ResponseFactory.getResponse( request, resource );
-    } catch ( ServerException  e){
-      response = ResponseFactory.getResponse( request, resource, e );
+    } catch ( BadRequestException  e){
+      response = new BadRequestResponse( resource );
     } catch ( IOException e ) {
       System.out.println(e);
       //response = ResponseFactory.getResponse( request, resource, e );

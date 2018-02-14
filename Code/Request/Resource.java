@@ -37,10 +37,11 @@ public class Resource{
     return this.mime;
   }
   public boolean isScript(){
-    if( this.uri.contains( "cgi-bin" ) ){
-      isScript = true;
-    }
-    return isScript;
+    // if( this.uri.contains( "cgi-bin" ) ){
+    //   isScript = true;
+    // }
+    // return isScript;
+   return !htppdConf.sciptAlias.isEmpty();
   }
   //TODO: protected method
   protected boolean isProtected(){
@@ -115,6 +116,7 @@ public class Resource{
 
     if( this.uri.equals( "/" )) {
       docRootAppended = httpdConf.getDocumentRoot() + httpdConf.getAccessFileName();
+      accessFilePath = docRootAppended;
     } else {
       for( int i = 0; i < uriTokens.length && !isProtected; i++ ){
         docRootAppended += (uriTokens[i] + "/");
@@ -122,11 +124,15 @@ public class Resource{
         accessFile = new File( docRootUriHtaccess );
         isProtected = accessFile.exists();
       }
+      accessFilePath = docRootUriHtaccess;
     }
 
-    accessFile = new File( docRootAppended );
+    accessFile = new File( accessFilePath );
     isProtected = accessFile.exists();     
 
+  }
+  public String getAccessFilePath(){
+    return this.accessFilePath;
   }
 
   public void print(){

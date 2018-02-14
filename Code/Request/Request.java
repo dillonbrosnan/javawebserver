@@ -28,6 +28,8 @@ public class Request{
   private byte[] messageBody;
   private static final int HEADER_KEY = 0;
   private static final int HEADER_VALUE= 1;
+  private static final int AUTH_KEY = 0;
+  private static final int AUTH_VALUE= 1;
   private static final String[] verbs = {
     "GET", "HEAD", "POST", "PUT", "DELETE"
   };
@@ -90,7 +92,13 @@ public class Request{
   }
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
-    this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
+    if(headParts[HEADER_KEY].equals("Authorization")) {
+      String[] authSplit = headerParts[HEADER_VALUE].split( " " );
+      this.headers.put( headParts[HEADER_KEY], authSplit[AUTH_VALUE] );
+    }
+    else{
+      this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
+    }
   }
 
   private void storeBody(){
@@ -127,6 +135,10 @@ public class Request{
   }
   public String getHttpVersion(){
     return this.httpVersion;
+  }
+
+  public String getHeader( String header ) {
+    return headers.get( header );
   }
 
   public void print(){
