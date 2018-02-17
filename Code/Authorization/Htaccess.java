@@ -12,12 +12,15 @@ public class Htaccess extends ConfigurationReader{
 
   public Htaccess (String fileName){
     super(fileName);
+    load();
   }
 
   public void load(){
     String[] fileLine = this.nextLine().split( "\\s+" );
     try{
-      this.userFile = new Htpassword( fileLine[1] );
+      String strippedQuotesFileName = fileLine[1].replace( "\"", "" );
+      //fileLine[1].replace( "\"", "" );
+      this.userFile = new Htpassword( strippedQuotesFileName );
     }
     catch(IOException e){
       System.out.println(e);
@@ -34,6 +37,8 @@ public class Htaccess extends ConfigurationReader{
   }
 
   public boolean isAuthorized( String authInfo ){
+    // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    // print();
     return this.userFile.isAuthorized( authInfo );    
   }
   // public boolean isValid( String authName ){

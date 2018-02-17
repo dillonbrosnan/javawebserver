@@ -35,6 +35,9 @@ public class ResponseFactory {
       else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) ) {
         return new ForbiddenResponse( resource );
       } 
+      // else{
+      //   System.out.println("ResponseFactory line 39: " + request.getHeader("Authorization"));
+      // }
     }
     File file = new File( resource.absolutePath() );
     if( !file.exists() ){

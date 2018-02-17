@@ -20,7 +20,7 @@ public class HttpdConf extends ConfigurationReader {
   public void load() {
     while( hasMoreLines() ) {
       line = this.nextLine();
-      System.out.println("Line in load() HttpdConf.java: " + line);
+      // System.out.println("Line in load() HttpdConf.java: " + line);
       line = line.replace( "\"", "" );
       this.configuration = line.split( " " );
       storeValues();

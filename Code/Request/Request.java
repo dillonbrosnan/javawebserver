@@ -78,7 +78,7 @@ public class Request{
   }
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
-    System.out.println(requestLineParse);
+    // System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
     if( isVerb( requestLineSubstrings[0] ) ){

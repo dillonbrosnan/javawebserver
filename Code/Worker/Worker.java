@@ -31,6 +31,7 @@ public class Worker extends Thread {
     try{
       request = new Request( client.getInputStream() );  
       request.parse();
+      request.print();
       resource = new Resource( request.getUri(), httpdConf, mime);
       response = ResponseFactory.getResponse( request, resource );
     } catch ( BadRequestException  e){

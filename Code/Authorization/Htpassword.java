@@ -28,18 +28,21 @@ public class Htpassword extends ConfigurationReader {
   }
 
   public boolean isAuthorized( String authInfo ) {
+
     // authInfo is provided in the header received from the client
     // as a Base64 encoded string.
     String credentials = new String(
       Base64.getDecoder().decode( authInfo ),
       Charset.forName( "UTF-8" )
     );
+    System.out.println("isAuthorized in htpassword: " + credentials);
 
     // The string is the key:value pair username:password
     String[] tokens = credentials.split( ":" );
 
     // TODO: implement this
     if( !(this.passwords.containsKey( tokens[0] )) ){
+      System.out.println("DOES NOT CONTAIN Authorization");
       return false;
     }
     else{
@@ -54,7 +57,10 @@ public class Htpassword extends ConfigurationReader {
     // TODO: implement this - note that the encryption step is provided as a
     // method, below
     String encryptedPassword = encryptClearPassword( password );
-    if( passwords.get( username ) == encryptedPassword ){
+    System.out.println("CLIENT SIDE USERNAME, PASSWORD, ENCCRYPTED PASSWORD: " + username + " " + password + " " + encryptedPassword);
+    System.out.println("SERVER SIDE PASSWORD " + passwords.get(username));
+    if( passwords.get( username ).equals( encryptedPassword ) ){
+      System.out.println("TRUE");
       return true;
     }
     return false;                         
@@ -73,6 +79,8 @@ public class Htpassword extends ConfigurationReader {
     }
   }
   public void load(){
-    
+      while( this.hasMoreLines() ){
+        parseLine( this.nextLine() );
+      }
   }
 }
