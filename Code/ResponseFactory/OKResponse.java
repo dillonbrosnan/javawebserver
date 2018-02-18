@@ -29,12 +29,12 @@ public class OKResponse extends Response{
     byte[] body = Files.readAllBytes( path );
     System.out.println("Q!@#!@#@!$@@!$!@ " + body.length);
     System.out.println("Below creating body");
-    
+
     this.sendAlwaysPhrase( output );
     System.out.println("below sending sendAlwaysPhrase");
     this.sendGenericHeader( output, "Content-Type", "text/html");
     System.out.println("below sending Content-Type header");
-    this.sendGenericHeader( output, "Content-Length", "3143" );
+    this.sendGenericHeader( output, "Content-Length", body.length + "" );
     this.sendGenericHeader( output, "Last-Modified", Long.toString( file.lastModified() ) );
     System.out.println("below sending Content-Length header");
     // this.sendGenericHeader( output, "Content-Length", String.valueOf( file.length() ) );

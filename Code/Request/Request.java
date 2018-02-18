@@ -50,7 +50,7 @@ public class Request{
   }
 
   public Request( InputStream httpRequestStream ) {
-    this.httpRequestStream = httpRequestStream;  
+    this.httpRequestStream = httpRequestStream;
     // try{
     //   parse();
     // }
@@ -64,17 +64,17 @@ public class Request{
     String line;
 
     parseRequestLine( reader.readLine() );
-    
+
     headers = new Hashtable<String, String>();
     line = reader.readLine();
     while( !line.isEmpty() ){
       addToHeaders( line );
       line = reader.readLine();
     }
-    line = reader.readLine();
-    if ( hasBody() ){
-      storeBody();
-    }
+    // line = reader.readLine();
+    // if ( hasBody() ){
+    //   storeBody();
+    // }
   }
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
@@ -91,7 +91,7 @@ public class Request{
     setHttpVersion( requestLineSubstrings[2] );
   }
   private void addToHeaders( String headerLine ){
-    String[] headerParts = headerLine.split(": ");  
+    String[] headerParts = headerLine.split(": ");
     if(headerParts[HEADER_KEY].equals("Authorization")) {
       String[] authSplit = headerParts[HEADER_VALUE].split( " " );
       this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
@@ -115,7 +115,7 @@ public class Request{
     return headers.containsKey( "Content-Length" );
   }
   private boolean isVerb( String verb ){
-    return Arrays.asList( verbs ).contains( verb ); 
+    return Arrays.asList( verbs ).contains( verb );
   }
   private void setVerb( String verb ){
     this.verb = verb;
@@ -146,7 +146,7 @@ public class Request{
 
   public void print(){
     System.out.println( "REQUEST LINE: " );
-    System.out.println( "Verb: " + this.verb + ", uri: " + this.uri + 
+    System.out.println( "Verb: " + this.verb + ", uri: " + this.uri +
       ", httpVersion: " + this.httpVersion );
     System.out.println( "HEADERS: ");
     for( String key: headers.keySet() ){
