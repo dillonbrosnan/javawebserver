@@ -28,24 +28,48 @@ public class Worker extends Thread {
   }
 
   public void run() {
-    try{
-      request = new Request( client.getInputStream() );  
-      request.parse();
-      request.print();
-      resource = new Resource( request.getUri(), httpdConf, mime);
-      response = ResponseFactory.getResponse( request, resource );
-    } catch ( BadRequestException  e){
-      response = new BadRequestResponse( resource );
-    } catch ( IOException e ) {
-      System.out.println(e);
-      //response = ResponseFactory.getResponse( request, resource, e );
-    }
+    // try{
+    //   // request = new Request( client.getInputStream() );  
+    //   // request.parse();
+    //   // request.print();
+    //   parseRequest( client.getInputStream() );
+    //   resource = new Resource( request.getUri(), httpdConf, mime);
+    //   response = ResponseFactory.getResponse( request, resource );
+    // } catch ( BadRequestException  e){
+    //   response = new BadRequestResponse( resource );
+    // } catch ( IOException e ) {
+    //   System.out.println(e);
+    //   //response = ResponseFactory.getResponse( request, resource, e );
+    // }
     
-    try {      
+    // try {      
+    //   response.send( client.getOutputStream() );
+    //   client.close();
+    // } catch ( IOException e){
+    //     System.out.println("CAUGHT IOException in worker response.send(): " + e);
+    // }
+    try{
+      parseRequest( client.getInputStream() );
+      resource = new Resource( request.getUri(), httpdConf, mime );
+      response = ResponseFactory.getResponse( request, resource);
+    }
+    catch( IOException e){
+      System.out.println("IOException line 57 worker.java " + e);
+    }
+    catch( BadRequestException e){
+      response = new BadRequestResponse( resource );
+    }
+    try{
       response.send( client.getOutputStream() );
       client.close();
-    } catch ( IOException e){
-        
     }
+    catch( IOException e){
+      System.out.println("IOException line 64 worker.java " + e);
+    }
+
+  }
+  public void parseRequest( InputStream inputStream ) throws BadRequestException, IOException{
+    request = new Request( inputStream );
+    request.parse();
   }
 }

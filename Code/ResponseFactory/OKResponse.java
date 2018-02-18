@@ -18,22 +18,32 @@ public class OKResponse extends Response{
     this.reasonPhrase = "OK";
   }
   public void send( OutputStream out ) throws IOException{
-    File file = new File( resource.absolutePath() );
-    Path path = Paths.get( resource.absolutePath() );
+    BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
+    System.out.println("below creating BufferedWriter");
+    System.out.println("OKResponse absolutePath: " + resource.getAbsolutePath());
+    File file = new File( resource.getAbsolutePath() );
+    System.out.println("Below creating file");
+    Path path = Paths.get( resource.getAbsolutePath() );
+    System.out.println("Below creating path");
 
     byte[] body = Files.readAllBytes( path );
-    BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
-
+    System.out.println("Q!@#!@#@!$@@!$!@ " + body.length);
+    System.out.println("Below creating body");
     
     this.sendAlwaysPhrase( output );
-    this.sendGenericHeader( output, "Content-Length", String.valueOf( file.length() ) );
+    System.out.println("below sending sendAlwaysPhrase");
+    this.sendGenericHeader( output, "Content-Type", "text/html");
+    System.out.println("below sending Content-Type header");
+    this.sendGenericHeader( output, "Content-Length", "3143" );
+    this.sendGenericHeader( output, "Last-Modified", Long.toString( file.lastModified() ) );
+    System.out.println("below sending Content-Length header");
     // this.sendGenericHeader( output, "Content-Length", String.valueOf( file.length() ) );
     // //this.sendGenericHeader( output, "Connection", "Closed" );
     // this.sendGenericHeader( output, "Content-Type", "text/html" );
 
     output.write( this.CRLF );
     output.flush();
-    out.write( body );
+    out.write( body, 0, body.length );
     out.flush();
   }
 }

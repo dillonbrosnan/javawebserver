@@ -47,7 +47,7 @@ public class Resource{
     return isProtected;
   }
 
-  public String absolutePath() {
+  public String getAbsolutePath() {
     // URI uriObject = new URI( this.uri );
     // return uriObject.getPath();
     return absolutePath;

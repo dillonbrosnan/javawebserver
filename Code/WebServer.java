@@ -12,10 +12,10 @@ import java.net.URISyntaxException;
 import java.io.PrintWriter;
 
 public class WebServer{
-  private static final String CONF_PATH = "./conf/httpd.conf";
-  private static final String MIME_PATH = "./conf/mime.types";
-  private static HttpdConf httpdConf;
-  private static MimeTypes mimeTypes;
+  // private static final String CONF_PATH = "./conf/httpd.conf";
+  // private static final String MIME_PATH = "./conf/mime.types";
+  // private static HttpdConf httpdConf;
+  // private static MimeTypes mimeTypes;
 
   public static void main( String[] args ){
     // // Request request = new Request("GET / http/1.1\r\nHost: net.tutsplus.com \r\n" +
@@ -46,37 +46,44 @@ public class WebServer{
     // Htaccess hta = new Htaccess("./Support/_.htaccess");
     // hta.load();
     // hta.print();
-    start();
-
-  }
-
-
-  public static void start(){
-    System.out.println("conf path: " + CONF_PATH);
-
-    httpdConf = new HttpdConf( CONF_PATH );
-    mimeTypes = new MimeTypes( MIME_PATH );
-    mimeTypes.load();
-    httpdConf.load();
     try{
-      ServerSocket socket = new ServerSocket( Integer.parseInt(httpdConf.getPort()) );
-      Socket client = null;
-      Thread worker = null;
-      //Htaccess hta = new Htaccess("./Support/_.htaccess");
-      while( true ){
-        client = socket.accept();
-        worker = new Worker( client, httpdConf, mimeTypes );
-        worker.start();
-        //outputRequest( client );
-        
-        // TODO: Response
-        //client.close();
-      }
+      Server server = new Server();
+      server.start();
     }
-    catch(IOException e){
+    catch( IOException e){
       System.out.println(e);
     }
+
   }
+
+
+  // public static void start() throws IOException{
+  //   try{}
+  //   // System.out.println("conf path: " + CONF_PATH);
+
+  //   // httpdConf = new HttpdConf( CONF_PATH );
+  //   // mimeTypes = new MimeTypes( MIME_PATH );
+  //   // mimeTypes.load();
+  //   // httpdConf.load();
+  //   // try{
+  //   //   ServerSocket socket = new ServerSocket( Integer.parseInt(httpdConf.getPort()) );
+  //   //   Socket client = null;
+  //   //   Thread worker = null;
+  //   //   //Htaccess hta = new Htaccess("./Support/_.htaccess");
+  //   //   while( true ){
+  //   //     client = socket.accept();
+  //   //     worker = new Worker( client, httpdConf, mimeTypes );
+  //   //     worker.start();
+  //   //     //outputRequest( client );
+        
+  //   //     // TODO: Response
+  //   //     //client.close();
+  //   //   }
+  //   // }
+  //   // catch(IOException e){
+  //   //   System.out.println(e);
+  //   // }
+  // }
 
   // protected static void outputRequest( Socket client ) throws IOException {
   //   // System.out.println( client.getInputStream().toString() );

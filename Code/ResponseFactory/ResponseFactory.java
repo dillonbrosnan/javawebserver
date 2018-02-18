@@ -34,9 +34,10 @@ public class ResponseFactory {
   // }
   public static Response getResponse( Request request, Resource resource ) throws IOException{
     Response response = null;
-    Path filePath = Paths.get( resource.absolutePath() );
+    Path filePath = Paths.get( resource.getAbsolutePath() );
     FormattedDate modDate;
     if( resource.isProtected() ){
+      System.out.println( "ResponseFactory.getResponse resource.getAccessFilePath() " + resource.getAccessFilePath());
       Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
       System.out.println("!ResponseFactory.headerKeyExists: "+ !request.headerKeyExists("Authorization"));
       if( !request.headerKeyExists( "Authorization" ) ) {
@@ -49,21 +50,13 @@ public class ResponseFactory {
       //   System.out.println("ResponseFactory line 39: " + request.getHeader("Authorization"));
       // }
     }
-    if( request.getVerb().equals( "GET" ) ){
-      modDate = new FormattedDate( Files.getLastModifiedTime( filePath ).toMillis() );
-      response = new OKResponse( resource );
-      response.setVerb( request.getVerb() );
-      response.setGenericHeader( "Last-Modified", modDate.toString() );
-      response.setGenericHeader( "Cache-Control", "mac-age=3600" );
-      FormattedDate expires = new FormattedDate( LocalDateTime.now().plusSeconds( 3600) );
-      response.setGenericHeader( "Expires", expires.toString() );
-    }
+    return new OKResponse( resource );
     // File file = new File( resource.absolutePath() );
     // System.out.println("ResponseFactory.resource.absolutePath: " + resource.absolutePath());
     // if( !file.exists() ){
     //   return new FileNotFoundResponse( resource );
     // }
-    return response;
+    // return response;
   }
   
   // isProtected(){

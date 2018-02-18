@@ -27,6 +27,9 @@ public abstract class Response {
   public Response( Resource resource ){
     this.resource = resource;
   }
+  public Response(){
+    
+  }
 
   public abstract void send( OutputStream out ) throws IOException;
 
