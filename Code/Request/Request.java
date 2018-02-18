@@ -72,9 +72,9 @@ public class Request{
       line = reader.readLine();
     }
     // line = reader.readLine();
-    // if ( hasBody() ){
-    //   storeBody();
-    // }
+    if ( hasBody() ){
+      storeBody();
+    }
   }
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
