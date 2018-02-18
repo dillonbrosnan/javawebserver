@@ -20,8 +20,9 @@ public class UnauthorizedResponse extends Response{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 
     this.sendAlwaysPhrase( output );
-    //TODO: find how to get WWW-Authenticate from _.htaccess
     this.sendGenericHeader( output, "WWW-Authenticate", "Basic" );
+    this.sendGenericHeader( output, "Content-Length", String.valueOf( body.length() ) );
+    this.sendGenericHeader( output, "Content-Type", "text/html" );
     output.write( this.CRLF );
     output.flush();
     output.write( body );

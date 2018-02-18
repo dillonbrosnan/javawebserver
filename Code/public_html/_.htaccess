@@ -1,4 +1,4 @@
-AuthUserFile "./Support/example.htpasswd"
+AuthUserFile "/home/dillonbrosnan/Desktop/667/server/web-server-dylandillon/Code/public_html/.htpasswd"
 AuthType Basic
 AuthName "I Challenge You"
 Require valid-user

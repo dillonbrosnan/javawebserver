@@ -22,6 +22,7 @@ public abstract class Response {
   public Resource resource;
   public String headers;
   public String verb;
+  protected String otherHeaders = "";
 
   public Response( Resource resource ){
     this.resource = resource;
@@ -58,6 +59,12 @@ public abstract class Response {
 
     out.write(genericHeader);
     out.flush();
+  }
+  public void setVerb( String verb ){
+    this.verb = verb;
+  }
+  public void setGenericHeader( String header, String value ){
+    otherHeaders += header + ": " + value + CRLF;
   }
 
 }
