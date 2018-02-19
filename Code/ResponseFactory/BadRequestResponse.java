@@ -20,8 +20,8 @@ public class BadRequestResponse extends Response{
 
     
     this.sendAlwaysPhrase( output );
-    this.sendGenericHeader( output, "Content-Length", String.valueOf( body.length() ) );
-    this.sendGenericHeader( output, "Connection", "Closed" );
+    this.sendHeaderTemplate( output, "Content-Length", String.valueOf( body.length() ) );
+    this.sendHeaderTemplate( output, "Connection", "Closed" );
     output.write( this.CRLF );
     output.flush();
     output.write( body );

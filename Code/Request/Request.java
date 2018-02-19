@@ -71,7 +71,7 @@ public class Request{
       addToHeaders( line );
       line = reader.readLine();
     }
-    line = reader.readLine();
+    //line = reader.readLine();
     if ( hasBody() ){
       storeBody();
     }
@@ -142,6 +142,15 @@ public class Request{
   }
   public boolean headerKeyExists( String key ){
     return headers.containsKey( key );
+  }
+  public byte[] getBody(){
+    return messageBody;
+  }
+  public boolean isModifiedSince(){
+    return headers.get( "If-Modified-Since" ) != null;
+  }
+  public String getModifiedDate(){
+    return headers.get( "If-Modified-Since" );
   }
 
   public void print(){

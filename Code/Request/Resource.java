@@ -5,6 +5,10 @@ import ConfigurationReader.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.io.File;
+import java.util.Arrays;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 public class Resource{
   private HttpdConf httpdConf;
@@ -17,7 +21,6 @@ public class Resource{
   private boolean isScript;
   private boolean isProtected;
   private boolean isAlias;
-  
 
   public Resource( String uri, HttpdConf httpdConf, MimeTypes mime ){
     this.uri = uri;
@@ -54,9 +57,12 @@ public class Resource{
   }
 
   protected void findAbsolutePath() {
+    System.out.println("findAbsolutePath resource.java uri: " + this.uri);
     String temporary = "/";
-    String[] uriSplit = uri.split( "/" );    
+    String[] uriSplit = uri.split( "/" );
+    System.out.println(Arrays.toString(uriSplit));    
     isDirectory = this.uri.endsWith( "/" );
+    System.out.println(isDirectory);
 
     if( uri.equals( "/" )) {
       absolutePath = httpdConf.getDocumentRoot();
@@ -107,6 +113,7 @@ public class Resource{
     return tempAbsolutePath;
   }
   private void checkAccessExists() {
+    System.out.println("Absolute path in Resource checkAccessExists " + absolutePath);
     accessFilePath = absolutePath;
     String[] uriTokens = this.uri.split("/");
     String docRootAppended = httpdConf.getDocumentRoot();
@@ -132,6 +139,17 @@ public class Resource{
   }
   public String getAccessFilePath(){
     return this.accessFilePath;
+  }
+  public boolean exists(){
+    return Files.exists( Paths.get (absolutePath ) );
+  }
+  public String getMimeType(){
+    String[] tokens;
+    String extensions;
+
+    tokens = absolutePath.split("\\.");
+    extensions = tokens[tokens.length-1];
+    return mime.lookup( extensions );
   }
 
   public void print(){

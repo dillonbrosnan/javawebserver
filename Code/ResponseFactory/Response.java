@@ -57,17 +57,22 @@ public abstract class Response {
     out.write( serverString );
     out.flush();
   }
-  protected void sendGenericHeader( BufferedWriter out, String header, String value ) throws IOException{
-    String genericHeader = header + ": " + value + CRLF;
-
-    out.write(genericHeader);
+  public void sendHeaderTemplate( BufferedWriter out, String header, String value ) throws IOException{
+    String line = header + ": " + value + CRLF;
+    out.write( line );
     out.flush();
+  }
+  public void setOtherHeaders( String header, String value ){
+    otherHeaders += header + ": " + value + CRLF;
+  }
+  protected void sendOtherHeaders( BufferedWriter out ) throws IOException{
+    if( otherHeaders != null){
+      out.write( otherHeaders );
+      out.flush();
+    }
   }
   public void setVerb( String verb ){
     this.verb = verb;
-  }
-  public void setGenericHeader( String header, String value ){
-    otherHeaders += header + ": " + value + CRLF;
   }
 
 }
