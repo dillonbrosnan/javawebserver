@@ -76,6 +76,12 @@ public abstract class Response {
   public String getVerb(){
     return this.verb;
   }
+  public void setBody( byte[] body ){
+    this.body = body;
+  }
+  public long getBodyLength(){
+    return this.body.length;
+  }
 
   public String toString() {
     if( body != null ) {

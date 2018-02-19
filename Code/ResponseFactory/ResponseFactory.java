@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.lang.Runtime;
+import java.io.BufferedReader;
+import java.io.InputStream;
 
 
 public class ResponseFactory {
@@ -48,6 +51,27 @@ public class ResponseFactory {
         response = new NotModifiedResponse( resource );
       } else {
         response = new OKResponse( resource );
+        if ( resource.isScript() ){
+          try{
+            String command = resource.getAbsolutePath();
+            System.out.println( "Command: " + command);
+            Process process = Runtime.getRuntime().exec( command, request.getEnvp() );
+            InputStream scriptOutput = process.getInputStream();
+            response.setBody( scriptOutput.readAllBytes() );
+            response.setOtherHeaders("Content-Type", "text/html");
+            response.setOtherHeaders("Content-Length", Long.toString( response.getBodyLength() ) );
+            process.waitFor();
+            if ( process.exitValue() ==  0){
+              System.out.println("successful script");
+            }else{
+              System.out.println("unsucessful script");
+            }
+          } catch (Exception e){
+            System.out.println( e );
+          }
+        }
+        
+        
         response.setVerb( requestVerb );
       }
       response.setOtherHeaders( "Last-Modified", modDate.toString() );
