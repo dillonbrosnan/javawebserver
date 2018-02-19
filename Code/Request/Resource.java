@@ -40,10 +40,11 @@ public class Resource{
     return this.mime;
   }
   public boolean isScript(){
-    if ( !this.httpdConf.scriptAliasesEmpty() ){
-      isScript = true;
-    }
-    return isScript;
+     System.out.println("isScript Resource.java 43" + this.isScript);
+    // if ( !this.httpdConf.scriptAliasesEmpty() ){
+    //   isScript = true;
+    // }
+    return this.isScript;
   }
   public boolean isProtected(){
     return isProtected;

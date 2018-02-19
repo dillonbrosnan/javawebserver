@@ -20,12 +20,14 @@ public class UnauthorizedResponse extends Response{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 
     this.sendAlwaysPhrase( output );
-    this.sendHeaderTemplate( output, "WWW-Authenticate", "Basic" );
+    //this.sendHeaderTemplate( output, "WWW-Authenticate", "Basic" );
     this.sendHeaderTemplate( output, "Content-Length", String.valueOf( body.length() ) );
     this.sendHeaderTemplate( output, "Content-Type", "text/html" );
-    output.write( this.CRLF );
-    output.flush();
-    output.write( body );
+    this.sendOtherHeaders( output );
+    output.write(this.CRLF);
+    // output.write( this.CRLF );
+    // output.flush();
+    // output.write( body );
     output.flush();
   }
 }

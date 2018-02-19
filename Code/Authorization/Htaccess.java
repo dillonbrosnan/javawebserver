@@ -28,7 +28,7 @@ public class Htaccess extends ConfigurationReader{
     String[] authTypeLine = this.nextLine().split( "\\s+" );
     this.authType = authTypeLine[1];
 
-    this.authName = getAuthName( this.nextLine() );
+    this.authName = parseAuthName( this.nextLine() );
 
     String[] requireLine = this.nextLine().split( "\\s+" );
     this.require = requireLine[1];
@@ -45,13 +45,16 @@ public class Htaccess extends ConfigurationReader{
     System.out.println(this.isAuthorized(this.authName));
   }
   
-  public String getAuthName(String line){
+  public String parseAuthName(String line){
     String[] authNameLine = line.split( "\\s+" );
     String returnName = authNameLine[1];
     for( int i = 2; i < authNameLine.length; i++ ){
       returnName += " " + authNameLine[i];
     }
     return returnName = returnName.replace( "\"", "" );
+  }
+  public String getAuthName(){
+    return this.authName;
   }
 
 }
