@@ -25,7 +25,7 @@ public class OKResponse extends Response{
     
     this.sendAlwaysPhrase( output );
     this.sendHeaderTemplate( output, "Content-Type", "text/html");
-    this.sendHeaderTemplate( output, "Content-Length", "3143" );
+    this.sendHeaderTemplate( output, "Content-Length", Long.toString( file.length() ) );
     this.sendHeaderTemplate( output, "Last-Modified", Long.toString( file.lastModified() ) );
 
     output.write( this.CRLF );
