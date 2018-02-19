@@ -36,6 +36,7 @@ public class Request{
   private static final String[] verbs = {
     "GET", "HEAD", "POST", "PUT", "DELETE"
   };
+  private String[] envp;
 
   public Request(){
 
@@ -61,6 +62,7 @@ public class Request{
       addToHeaders( line );
       line = reader.readLine();
     }
+    createEnvp();
     //line = reader.readLine();
     if ( hasBody() ){
       storeBody();
@@ -99,6 +101,18 @@ public class Request{
     }
     catch( IOException e ){
       System.out.println( e );
+    }
+  }
+  private void createEnvp(){
+    envp = new String[ headers.size() + 2 ];
+    envp[ 0 ] = "HTTP_SERVER_PROTOCOL = " + getHttpVersion();
+    envp[ 1 ] = "HTTP_QUERY_STRING = " + getUri();
+    int i = 2;
+    for ( String key: headers.keySet() ){
+      String value = headers.get( key ).toString();
+      String envpString = "HTTP_" + key.toUpperCase() + " = " + value;
+      envp[i] = envpString;
+      i++;
     }
   }
   private boolean hasBody(){
@@ -141,6 +155,9 @@ public class Request{
   }
   public String getModifiedDate(){
     return headers.get( "If-Modified-Since" );
+  }
+  public String[] getEnvp(){
+    return envp;
   }
 
   public String toString() {

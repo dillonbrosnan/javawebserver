@@ -18,30 +18,30 @@ public class OKResponse extends Response{
     this.reasonPhrase = "OK";
   }
   public void send( OutputStream out ) throws IOException{
-    byte[] body;
 
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
     this.sendAlwaysPhrase( output );
     this.sendOtherHeaders( output );
     System.out.println("OKResponse line 26 isScript= " + resource.isScript());
 
-    if( resource.isScript() ){
-      body = "REDIRECTED SCRIPT OUTPUT".getBytes();
+    if( !resource.isScript() ){
+      File file = new File( resource.getAbsolutePath() );
+      Path path = Paths.get( resource.getAbsolutePath() );
+      this.body = Files.readAllBytes( path );
+      this.sendHeaderTemplate( output, "Content-Type", "text/html");
+      this.sendHeaderTemplate( output, "Content-Length", Long.toString( file.length() ) );
+      this.sendHeaderTemplate( output, "Last-Modified", Long.toString( file.lastModified() ) );
+      // body = "REDIRECTED SCRIPT OUTPUT".getBytes();
     }
     else{
-        File file = new File( resource.getAbsolutePath() );
-        Path path = Paths.get( resource.getAbsolutePath() );
-        body = Files.readAllBytes( path );
-        this.sendHeaderTemplate( output, "Content-Type", "text/html");
-        this.sendHeaderTemplate( output, "Content-Length", Long.toString( file.length() ) );
-        this.sendHeaderTemplate( output, "Last-Modified", Long.toString( file.lastModified() ) );
-    }
+        this.sendOtherHeaders( output );
+    } 
     output.write( this.CRLF );
     output.flush();
 
     if( !this.getVerb().equals( "HEAD") ){
-        out.write( body, 0, body.length );
-        out.flush();
+      out.write( this.body, 0, this.body.length );
+      out.flush();
     }
     // if resource.isScript(){
     //     body = "REDIRECTED SCRIPT OUTPUT".getBytes();
