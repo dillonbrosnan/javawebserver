@@ -82,7 +82,7 @@ public class Request{
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
     if(headerParts[HEADER_KEY].equals("Authorization")) {
-      this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
+      //this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
       String[] authSplit = headerParts[HEADER_VALUE].split( " " );
       this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
     }
@@ -145,8 +145,8 @@ public class Request{
 
   public String toString() {
     
-    String serverLog = getHeader( "HOST" ) + 
-      " - " + getHeader( getHeader( "Authorization" ) ) + 
+    String serverLog = getHeader( "Host" ) + 
+      " - " + getHeader( "Authorization" ) + 
       " " + "[" + date.toString() + "]" + "  \"" + requestLine + "\"";
 
     return serverLog;
