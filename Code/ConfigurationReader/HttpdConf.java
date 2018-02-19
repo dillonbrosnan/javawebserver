@@ -63,9 +63,14 @@ public class HttpdConf extends ConfigurationReader {
   }
 
   public String getScriptAlias( String pathToCheck ) {
-    return scriptAliases.get( pathToCheck );
+    String[] pathSplit = pathToCheck.split("/");
+    if( pathSplit.length > 0 ) {
+      return scriptAliases.get( "/" + pathSplit[1] + "/" );
+    }
+    return null;
   }
   public boolean scriptAliasesEmpty(){
+    System.out.println("HTTPDCONF 69 scriptAliasesEmpty" + this.scriptAliases.isEmpty());
     return this.scriptAliases.isEmpty();
   }
 

@@ -26,10 +26,13 @@ public class ResponseFactory {
     if( resource.isProtected() ){
       Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
       if( !request.headerKeyExists( "Authorization" ) ) {
-        return new UnauthorizedResponse( resource );
+        response = new UnauthorizedResponse( resource );
+        response.setOtherHeaders( "WWW-Authenticate", "Basic realm = \"" + htaccess.getAuthName() + "\"");
+        return response;
       }
       else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) ) {
-        return new ForbiddenResponse( resource );
+        response = new ForbiddenResponse( resource );
+        return response;
       } 
     }
     if( !requestVerb.equals( "PUT " ) && !resource.exists() ){

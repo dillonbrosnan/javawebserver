@@ -73,6 +73,9 @@ public abstract class Response {
   public void setVerb( String verb ){
     this.verb = verb;
   }
+  public String getVerb(){
+    return this.verb;
+  }
 
   public String toString() {
     if( body != null ) {

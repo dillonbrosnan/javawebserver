@@ -40,10 +40,9 @@ public class Resource{
     return this.mime;
   }
   public boolean isScript(){
-    if ( !this.httpdConf.scriptAliasesEmpty() ){
-      isScript = true;
-    }
-    return isScript;
+    String scriptPath = httpdConf.getScriptAlias( this.uri );
+    isScript = scriptPath != null;
+    return this.isScript;
   }
   public boolean isProtected(){
     return isProtected;
