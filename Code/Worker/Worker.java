@@ -4,6 +4,7 @@ import ConfigurationReader.*;
 import Request.*;
 import ResponseFactory.*;
 import Exceptions.*;
+import Logger.*;
 
 import java.lang.Thread;
 import java.net.Socket;
@@ -48,25 +49,32 @@ public class Worker extends Thread {
     // } catch ( IOException e){
     //     System.out.println("CAUGHT IOException in worker response.send(): " + e);
     // }
+    Logger logger = new Logger( httpdConf.getLogFile() );
     try{
       parseRequest( client.getInputStream() );
       resource = new Resource( request.getUri(), httpdConf, mime );
-      response = ResponseFactory.getResponse( request, resource);
+      response = ResponseFactory.getResponse( request, resource);   
     }
     catch( IOException e){
-      System.out.println("IOException line 57 worker.java " + e);
+      System.out.println("IOException line 59 worker.java " + e );
     }
     catch( BadRequestException e){
       response = new BadRequestResponse( resource );
     }
     try{
-      response.send( client.getOutputStream() );
+      response.send( client.getOutputStream() );         
       client.close();
     }
     catch( IOException e){
-      System.out.println("IOException line 64 worker.java " + e);
+      System.out.println("IOException line 69 worker.java " + e );
     }
 
+    try {
+      logger.write( request, response );
+    } 
+    catch ( IOException e ){
+      System.out.println("IOException in Logger" + e );
+    }
   }
   public void parseRequest( InputStream inputStream ) throws BadRequestException, IOException{
     request = new Request( inputStream );

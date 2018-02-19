@@ -1,5 +1,8 @@
 package Request;
+
 import Exceptions.*;
+import Date.*;
+import java.time.LocalDateTime;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
@@ -20,9 +23,11 @@ public class Request{
   private String httpVersion;
   private String verb;
   private String httpRequest;
-  private InputStream httpRequestStream;
-  private String[] parsedTest;
+  private String requestLine;
+  private FormattedDate date;
+  private InputStream httpRequestStream;  
   private Hashtable<String, String> headers;
+  private String[] parsedTest;
   private byte[] messageBody;
   private static final int HEADER_KEY = 0;
   private static final int HEADER_VALUE= 1;
@@ -42,6 +47,7 @@ public class Request{
 
   public Request( InputStream httpRequestStream ) {
     this.httpRequestStream = httpRequestStream;  
+    date = new FormattedDate( LocalDateTime.now() );
   }
   public void parse() throws IOException, BadRequestException{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
@@ -63,7 +69,7 @@ public class Request{
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
-
+    requestLine = requestLineParse;
     if( isVerb( requestLineSubstrings[0] ) ){
       setVerb( requestLineSubstrings[0] );
     }
@@ -76,6 +82,7 @@ public class Request{
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
     if(headerParts[HEADER_KEY].equals("Authorization")) {
+      this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
       String[] authSplit = headerParts[HEADER_VALUE].split( " " );
       this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
     }
@@ -134,6 +141,15 @@ public class Request{
   }
   public String getModifiedDate(){
     return headers.get( "If-Modified-Since" );
+  }
+
+  public String toString() {
+    
+    String serverLog = getHeader( "HOST" ) + 
+      " - " + getHeader( getHeader( "Authorization" ) ) + 
+      " " + "[" + date.toString() + "]" + "  \"" + requestLine + "\"";
+
+    return serverLog;
   }
 
   public void print(){

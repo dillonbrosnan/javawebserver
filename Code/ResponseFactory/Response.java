@@ -12,13 +12,12 @@ import java.text.SimpleDateFormat;
 
 public abstract class Response {
 
-  public int code;
   public String httpVersion = "HTTP/1.1";
   public String server = "TeamDoubleDServer";
   public String CRLF = "\r\n";
   public String reasonPhrase;
   public int statusCode;
-  public byte[] body;
+  public byte[] body = null;
   public Resource resource;
   public String headers;
   public String verb;
@@ -75,4 +74,10 @@ public abstract class Response {
     this.verb = verb;
   }
 
+  public String toString() {
+    if( body != null ) {
+      return this.statusCode + " " + body.length;
+    }
+    return this.statusCode + " -";
+  }
 }

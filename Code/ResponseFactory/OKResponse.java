@@ -24,7 +24,7 @@ public class OKResponse extends Response{
     byte[] body = Files.readAllBytes( path );
     
     this.sendAlwaysPhrase( output );
-    this.sendHeaderTemplate( output, "Content-Type", "text/html");
+    this.sendHeaderTemplate( output, "Content-Type", resource.getMimeType() );
     this.sendHeaderTemplate( output, "Content-Length", Long.toString( file.length() ) );
     this.sendHeaderTemplate( output, "Last-Modified", Long.toString( file.lastModified() ) );
 
