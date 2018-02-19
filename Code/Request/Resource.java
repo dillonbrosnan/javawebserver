@@ -45,24 +45,18 @@ public class Resource{
     }
     return isScript;
   }
-  //TODO: protected method
   public boolean isProtected(){
     return isProtected;
   }
 
   public String getAbsolutePath() {
-    // URI uriObject = new URI( this.uri );
-    // return uriObject.getPath();
     return absolutePath;
   }
 
   protected void findAbsolutePath() {
-    System.out.println("findAbsolutePath resource.java uri: " + this.uri);
     String temporary = "/";
-    String[] uriSplit = uri.split( "/" );
-    System.out.println(Arrays.toString(uriSplit));    
+    String[] uriSplit = uri.split( "/" );   
     isDirectory = this.uri.endsWith( "/" );
-    System.out.println(isDirectory);
 
     if( uri.equals( "/" )) {
       absolutePath = httpdConf.getDocumentRoot();
@@ -81,14 +75,7 @@ public class Resource{
     if ( isDirectory ) {
       appendDirIndex();
     } 
-  } //TODO: check file exists (no: throw 404)
-  // protected void fileExists(){
-  //   File fn = new File( this.absolutePath() );
-  //   if( !fn.exists() ){
-  //     throw new FileNotFoundException();
-  //   }
-  // }
-
+  } 
   private void resolveUnmodUri() {
     absolutePath = "";
     absolutePath += httpdConf.getDocumentRoot() + this.uri.replaceFirst( "/", "" );
@@ -113,7 +100,6 @@ public class Resource{
     return tempAbsolutePath;
   }
   private void checkAccessExists() {
-    System.out.println("Absolute path in Resource checkAccessExists " + absolutePath);
     accessFilePath = absolutePath;
     String[] uriTokens = this.uri.split("/");
     String docRootAppended = httpdConf.getDocumentRoot();

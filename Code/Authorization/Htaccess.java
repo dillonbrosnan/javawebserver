@@ -19,7 +19,6 @@ public class Htaccess extends ConfigurationReader{
     String[] fileLine = this.nextLine().split( "\\s+" );
     try{
       String strippedQuotesFileName = fileLine[1].replace( "\"", "" );
-      //fileLine[1].replace( "\"", "" );
       this.userFile = new Htpassword( strippedQuotesFileName );
     }
     catch(IOException e){
@@ -30,21 +29,14 @@ public class Htaccess extends ConfigurationReader{
     this.authType = authTypeLine[1];
 
     this.authName = getAuthName( this.nextLine() );
-    //IS I CHALLENGE YOU 3 seperate users or 1 user 
 
     String[] requireLine = this.nextLine().split( "\\s+" );
     this.require = requireLine[1];
   }
 
   public boolean isAuthorized( String authInfo ){
-    // System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    // print();
     return this.userFile.isAuthorized( authInfo );    
   }
-  // public boolean isValid( String authName ){
-  //   String userNamePassword = Htpassword.decode( authName );
-  //   String userNamePasswordTokens[] = 
-  // }
 
   public void print(){
     System.out.println("authType: " + this.authType);

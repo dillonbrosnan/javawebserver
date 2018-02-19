@@ -13,7 +13,6 @@ public class Htpassword extends ConfigurationReader {
 
   public Htpassword( String filename ) throws IOException {
     super( filename );
-    //System.out.println( "Password file: " + filename );
 
     this.passwords = new HashMap<String, String>();
     this.load();
@@ -42,7 +41,6 @@ public class Htpassword extends ConfigurationReader {
 
     // TODO: implement this
     if( !(this.passwords.containsKey( tokens[0] )) ){
-      //System.out.println("DOES NOT CONTAIN Authorization");
       return false;
     }
     else{
@@ -57,10 +55,7 @@ public class Htpassword extends ConfigurationReader {
     // TODO: implement this - note that the encryption step is provided as a
     // method, below
     String encryptedPassword = encryptClearPassword( password );
-    //System.out.println("CLIENT SIDE USERNAME, PASSWORD, ENCCRYPTED PASSWORD: " + username + " " + password + " " + encryptedPassword);
-    //System.out.println("SERVER SIDE PASSWORD " + passwords.get(username));
     if( passwords.get( username ).equals( encryptedPassword ) ){
-     // System.out.println("TRUE");
       return true;
     }
     return false;                         

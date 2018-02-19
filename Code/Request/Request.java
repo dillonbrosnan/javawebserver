@@ -1,6 +1,5 @@
 package Request;
 import Exceptions.*;
-//TODO: THROW 400 BAD REQUEST
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
@@ -13,7 +12,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-// import java.*;
 
 public class Request{
 
@@ -40,24 +38,10 @@ public class Request{
 
   public Request( String httpRequest ){
     this.httpRequest = httpRequest;
-    // try{
-    //   parse();
-    // }
-    // catch( IOException ex ){
-    //   //TODO implement 400 response handling
-    //   System.out.println( ex.toString() );
-    // }
   }
 
   public Request( InputStream httpRequestStream ) {
     this.httpRequestStream = httpRequestStream;  
-    // try{
-    //   parse();
-    // }
-    // catch( IOException ex ){
-    //   //TODO implement 400 response handling
-    //   System.out.println( ex.toString() );
-    // }
   }
   public void parse() throws IOException, BadRequestException{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
@@ -78,7 +62,6 @@ public class Request{
   }
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
-    // System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
 
     if( isVerb( requestLineSubstrings[0] ) ){

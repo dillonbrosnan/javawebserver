@@ -19,27 +19,14 @@ public class OKResponse extends Response{
   }
   public void send( OutputStream out ) throws IOException{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
-    //System.out.println("below creating BufferedWriter");
-    //System.out.println("OKResponse absolutePath: " + resource.getAbsolutePath());
-    File file = new File( resource.getAbsolutePath() );
-    //System.out.println("Below creating file");
+    File file = new File( resource.getAbsolutePath() );;
     Path path = Paths.get( resource.getAbsolutePath() );
-    //System.out.println("Below creating path");
-
     byte[] body = Files.readAllBytes( path );
-    //System.out.println("Q!@#!@#@!$@@!$!@ " + body.length);
-    //System.out.println("Below creating body");
     
     this.sendAlwaysPhrase( output );
-    //System.out.println("below sending sendAlwaysPhrase");
     this.sendHeaderTemplate( output, "Content-Type", "text/html");
-    //System.out.println("below sending Content-Type header");
     this.sendHeaderTemplate( output, "Content-Length", "3143" );
     this.sendHeaderTemplate( output, "Last-Modified", Long.toString( file.lastModified() ) );
-    //System.out.println("below sending Content-Length header");
-    // this.sendGenericHeader( output, "Content-Length", String.valueOf( file.length() ) );
-    // //this.sendGenericHeader( output, "Connection", "Closed" );
-    // this.sendGenericHeader( output, "Content-Type", "text/html" );
 
     output.write( this.CRLF );
     output.flush();

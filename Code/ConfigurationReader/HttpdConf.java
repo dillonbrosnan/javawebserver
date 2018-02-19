@@ -13,14 +13,11 @@ public class HttpdConf extends ConfigurationReader {
 
   public HttpdConf( String fileName ) {
     super( fileName );
-        //System.out.println("File Name: " + fileName);
-    //this.load();
   }
 
   public void load() {
     while( hasMoreLines() ) {
       line = this.nextLine();
-      // System.out.println("Line in load() HttpdConf.java: " + line);
       line = line.replace( "\"", "" );
       this.configuration = line.split( " " );
       storeValues();
