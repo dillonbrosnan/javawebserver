@@ -13,5 +13,4 @@ log.txt
 *.htpasswd
 
 # specs
-*.pdf
 *.png
