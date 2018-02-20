@@ -18,7 +18,7 @@ public class Logger{
     try {
       FileWriter fileWriter = new FileWriter ( this.file, true );
       String log = request.toString() + " " + response.toString() + "\n";
-      System.out.print(log);
+      System.out.print( log );
       fileWriter.write ( log );
       fileWriter.flush();
       fileWriter.close();

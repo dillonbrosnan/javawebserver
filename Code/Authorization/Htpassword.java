@@ -34,13 +34,12 @@ public class Htpassword extends ConfigurationReader {
       Base64.getDecoder().decode( authInfo ),
       Charset.forName( "UTF-8" )
     );
-    //System.out.println("isAuthorized in htpassword: " + credentials);
 
     // The string is the key:value pair username:password
     String[] tokens = credentials.split( ":" );
 
     // TODO: implement this
-    if( !(this.passwords.containsKey( tokens[0] )) ){
+    if( !(this.passwords.containsKey( tokens[0] ) ) ){
       return false;
     }
     else{

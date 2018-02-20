@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 
 public class InternalServerErrorResponse extends Response{
+
   public InternalServerErrorResponse( Resource resource ){
     super( resource );
     this.statusCode = 500;
     this.reasonPhrase = "Internal Server Error";
   }
+  
   public void send( OutputStream out ) throws IOException{
     String body = "<html><head><title>500 File Not Found</title></head><body>" 
       + "<h1>500 - Internal Server Error</h1></body></html>";

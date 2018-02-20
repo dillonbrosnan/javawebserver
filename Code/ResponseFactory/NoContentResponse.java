@@ -8,11 +8,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class NoContentResponse extends Response {
+
   public NoContentResponse( Resource resource ){
     super( resource );
     this.statusCode = 204;
     this.reasonPhrase = "Not Content";
   }
+  
   public void send( OutputStream out ) throws IOException{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 

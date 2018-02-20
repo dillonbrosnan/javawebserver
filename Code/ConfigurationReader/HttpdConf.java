@@ -69,9 +69,8 @@ public class HttpdConf extends ConfigurationReader {
     }
     return null;
   }
+
   public boolean scriptAliasesEmpty(){
-    System.out.println("HTTPDCONF 69 scriptAliasesEmpty" + this.scriptAliases.isEmpty());
     return this.scriptAliases.isEmpty();
   }
-
 }

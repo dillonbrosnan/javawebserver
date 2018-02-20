@@ -8,11 +8,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 public class NotModifiedResponse extends Response {
+
   public NotModifiedResponse( Resource resource ){
     super( resource );
     this.statusCode = 304;
     this.reasonPhrase = "Not Modified";
   }
+  
   public void send( OutputStream out ) throws IOException{
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 

@@ -35,25 +35,30 @@ public class ResponseFactory {
         return response;
       }
     }
+
     if( !requestVerb.equals( "PUT " ) && !resource.exists() ){
       return new FileNotFoundResponse( resource );
     }
+
     if( requestVerb.equals( "GET" ) || requestVerb.equals( "HEAD" ) || 
       requestVerb.equals( "POST" ) ){
       if( requestVerb.equals( "POST" ) ){
         Files.write( filePath, request.getBody() );
       }
+
       modDate = new FormattedDate( Files.getLastModifiedTime( filePath ).toMillis() );
       if( request.isModifiedSince() && request.getModifiedDate().equals( modDate.toString() ) ) {
         response = new NotModifiedResponse( resource );
-      } else {
+      } 
+      else {
         if ( resource.isScript() ){
           try{
             response = runScript( request, resource );
             if ( response.getStatusCode() == 500 ){
               return response;
             }
-          } catch (Exception e){
+          } 
+          catch (Exception e){
             System.out.println( e );
           }
         }
@@ -67,15 +72,18 @@ public class ResponseFactory {
       FormattedDate expire = new FormattedDate( LocalDateTime.now().plusSeconds( 3600 ) );
       response.setOtherHeaders( "Expires", expire.toString() );
     }
+
     else if( requestVerb.equals( "PUT" ) ){
       Files.write( filePath, request.getBody() );
       response = new CreatedResponse( resource );
       response.setOtherHeaders( "Location", request.getUri() );
     }
+
     else if( requestVerb.equals( "Delete" ) ){
       Files.delete( filePath );
       response = new NoContentResponse( resource );
     }
+
     return response;
   }
 
@@ -126,5 +134,4 @@ public class ResponseFactory {
       return new InternalServerErrorResponse( resource );
     }
   }
-
 }

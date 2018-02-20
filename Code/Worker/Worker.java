@@ -30,6 +30,7 @@ public class Worker extends Thread {
 
   public void run() {
     Logger logger = new Logger( httpdConf.getLogFile() );
+
     try{
       parseRequest( client.getInputStream() );
       resource = new Resource( request.getUri(), httpdConf, mime );
@@ -41,10 +42,11 @@ public class Worker extends Thread {
     catch( BadRequestException e){
       response = new BadRequestResponse( resource );
     }
-     catch( Exception e){
+    catch( Exception e){
       response = new InternalServerErrorResponse( resource );
     }
   }
+  
   public void parseRequest( InputStream inputStream ) throws BadRequestException, IOException{
     request = new Request( inputStream );
     request.parse();

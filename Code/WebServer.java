@@ -20,6 +20,7 @@ public class WebServer{
     httpdConf.load();
     mimeTypes.load();
   }
+  
   public static void start() throws IOException{
     listenPort = Integer.parseInt( httpdConf.getPort() );
     ServerSocket socket = new ServerSocket( listenPort );

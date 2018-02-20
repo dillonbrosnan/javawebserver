@@ -18,8 +18,8 @@ public class StartServer{
       WebServer server = new WebServer();
       server.start();
     }
-    catch( IOException e){
-      System.out.println(e);
+    catch( IOException e ){
+      System.out.println( e );
     }
 
   }

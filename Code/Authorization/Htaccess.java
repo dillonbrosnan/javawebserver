@@ -8,10 +8,9 @@ public class Htaccess extends ConfigurationReader{
   private String authType;
   private String authName;
   private String require;
-   //htp object?
 
-  public Htaccess (String fileName){
-    super(fileName);
+  public Htaccess ( String fileName ){
+    super( fileName );
     load();
   }
 
@@ -39,10 +38,10 @@ public class Htaccess extends ConfigurationReader{
   }
 
   public void print(){
-    System.out.println("authType: " + this.authType);
-    System.out.println("require: " + this.require);
-    System.out.println("authName: " + this.authName);
-    System.out.println(this.isAuthorized(this.authName));
+    System.out.println( "authType: " + this.authType );
+    System.out.println( "require: " + this.require );
+    System.out.println( "authName: " + this.authName );
+    System.out.println( this.isAuthorized( this.authName ) );
   }
   
   public String parseAuthName(String line){
@@ -56,5 +55,4 @@ public class Htaccess extends ConfigurationReader{
   public String getAuthName(){
     return this.authName;
   }
-
 }

@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.nio.file.Files;
 
 public class Resource{
+  
   private HttpdConf httpdConf;
   private MimeTypes mime;
   private String uri;
@@ -31,25 +32,6 @@ public class Resource{
     isProtected = false;
     this.findAbsolutePath();
     this.checkAccessExists();
-  }
-  public HttpdConf getConfiguration() {
-    return this.httpdConf;
-  }
-
-  public MimeTypes getMimeTypes() {
-    return this.mime;
-  }
-  public boolean isScript(){
-    String scriptPath = httpdConf.getScriptAlias( this.uri );
-    isScript = scriptPath != null;
-    return this.isScript;
-  }
-  public boolean isProtected(){
-    return isProtected;
-  }
-
-  public String getAbsolutePath() {
-    return absolutePath;
   }
 
   protected void findAbsolutePath() {
@@ -82,10 +64,6 @@ public class Resource{
 
   private void appendDirIndex() {
     absolutePath += httpdConf.getDirectoryIndex();
-  }
-
-  private boolean isAlias( String path ) {
-    return httpdConf.getAlias( path ) != null;
   }
 
   private String restOfPath( String[] uriSplit ) {
@@ -122,12 +100,7 @@ public class Resource{
     isProtected = accessFile.exists();     
 
   }
-  public String getAccessFilePath(){
-    return this.accessFilePath;
-  }
-  public boolean exists(){
-    return Files.exists( Paths.get (absolutePath ) );
-  }
+
   public String getMimeType(){
     String[] tokens;
     String extensions;
@@ -135,11 +108,42 @@ public class Resource{
     tokens = absolutePath.split("\\.");
     extensions = tokens[tokens.length-1];
     String mimeType = mime.lookup( extensions );  
-    System.out.println(mimeType);
     if(mimeType == null ){
       return "text/text";
     }  
     return mimeType;
+  }
+
+  public HttpdConf getConfiguration() {
+    return this.httpdConf;
+  }
+
+  public MimeTypes getMimeTypes() {
+    return this.mime;
+  }
+  public boolean isScript(){
+    String scriptPath = httpdConf.getScriptAlias( this.uri );
+    isScript = scriptPath != null;
+    return this.isScript;
+  }
+  public boolean isProtected(){
+    return isProtected;
+  }
+
+  public String getAbsolutePath() {
+    return absolutePath;
+  }
+
+  private boolean isAlias( String path ) {
+    return httpdConf.getAlias( path ) != null;
+  }
+
+  public String getAccessFilePath(){
+    return this.accessFilePath;
+  }
+  
+  public boolean exists(){
+    return Files.exists( Paths.get (absolutePath ) );
   }
 
   public void print(){

@@ -15,7 +15,7 @@ public abstract class ConfigurationReader {
       checkLines = new Scanner( file );
     }
     catch(FileNotFoundException e){
-      System.out.println(e);
+      System.out.println( e );
     }
   }
   
