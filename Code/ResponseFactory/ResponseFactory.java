@@ -38,7 +38,10 @@ public class ResponseFactory {
     }
 
     if( !requestVerb.equals( "PUT" ) && !resource.exists() ){
+<<<<<<< HEAD
       
+=======
+>>>>>>> 9a9130d2b56c717612124c2f05b1c9b1498893c0
       return new FileNotFoundResponse( resource );
     }
 
@@ -90,7 +93,7 @@ public class ResponseFactory {
       response.setOtherHeaders( "Location", request.getUri() );
     }
 
-    else if( requestVerb.equals( "Delete" ) ){
+    else if( requestVerb.equals( "DELETE" ) ){
       Files.delete( filePath );
       response = new NoContentResponse( resource );
     }
