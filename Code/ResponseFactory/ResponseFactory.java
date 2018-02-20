@@ -37,7 +37,8 @@ public class ResponseFactory {
       }
     }
 
-    if( !requestVerb.equals( "PUT " ) && !resource.exists() ){
+    if( !requestVerb.equals( "PUT" ) && !resource.exists() ){
+      
       return new FileNotFoundResponse( resource );
     }
 
@@ -79,11 +80,13 @@ public class ResponseFactory {
       // File file = new File( resource.getAbsolutePath() );
       // FileOutputStream fOS = new FileOutputStream( file );
       // fOS.write( request.getBody() );
+      // fOS.close();
       if( Files.exists( filePath ) ){
         response = new CreatedResponse( resource );
       } else {
         response = new InternalServerErrorResponse( resource );
       }     
+
       response.setOtherHeaders( "Location", request.getUri() );
     }
 
