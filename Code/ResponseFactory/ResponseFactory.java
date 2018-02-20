@@ -22,22 +22,18 @@ import java.util.Map;
 
 
 public class ResponseFactory {
+
   public static Response getResponse( Request request, Resource resource ) throws IOException{
     Response response = null;
     Path filePath = Paths.get( resource.getAbsolutePath() );
     FormattedDate modDate;
     String requestVerb = request.getVerb();
+
     if( resource.isProtected() ){
-      Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
-      if( !request.headerKeyExists( "Authorization" ) ) {
-        response = new UnauthorizedResponse( resource );
-        response.setOtherHeaders( "WWW-Authenticate", "Basic realm = \"" + htaccess.getAuthName() + "\"");
+      response = checkAuthorization( request, resource );
+      if( response != null ){
         return response;
       }
-      else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) ) {
-        response = new ForbiddenResponse( resource );
-        return response;
-      } 
     }
     if( !requestVerb.equals( "PUT " ) && !resource.exists() ){
       return new FileNotFoundResponse( resource );
@@ -51,49 +47,19 @@ public class ResponseFactory {
       if( request.isModifiedSince() && request.getModifiedDate().equals( modDate.toString() ) ) {
         response = new NotModifiedResponse( resource );
       } else {
-        response = new OKResponse( resource );
         if ( resource.isScript() ){
           try{
-            String command = resource.getAbsolutePath();  
-            ProcessBuilder processBuilder = new ProcessBuilder( command );
-            Map<String,String> env = processBuilder.environment();
-            Map<String,String> headers = request.getHeaders();
-
-            String value = "";
-            String[] queryString;
-            if(request.getUri().contains("?")){
-              queryString = request.getUri().split("?");
-              value = queryString[1];
-              env.put("HTTP_QUERY_STRING",value);
-            }            
-            env.put("HTTP_SERVER_PROTOCOL",request.getHttpVersion());
-
-            for ( String key: headers.keySet() ){
-              value = headers.get( key ).toString();
-              String envpString = "HTTP_" + key.toUpperCase();
-              env.put(envpString, value);
-            }
-            
-
-            Process process = processBuilder.start();
-
-            //Process process = Runtime.getRuntime().exec( command, request.getEnvp() );
-            InputStream scriptOutput = process.getInputStream();
-            response.setBody( scriptOutput.readAllBytes() );
-            //response.setOtherHeaders("Content-Type", "text/html");
-            //response.setOtherHeaders("Content-Length", Long.toString( response.getBodyLength() ) );
-            process.waitFor();
-            if ( process.exitValue() ==  0){
-              System.out.println("successful script");
-            }else{
-              System.out.println("unsucessful script");
+            response = runScript( request, resource );
+            if ( response.getStatusCode() == 500 ){
+              return response;
             }
           } catch (Exception e){
             System.out.println( e );
           }
         }
-        
-        
+        else{
+          response = new OKResponse( resource );
+        }    
         response.setVerb( requestVerb );
       }
       response.setOtherHeaders( "Last-Modified", modDate.toString() );
@@ -112,4 +78,53 @@ public class ResponseFactory {
     }
     return response;
   }
+
+  private static Response checkAuthorization( Request request, Resource resource ){
+    Response response = null;
+    Htaccess htaccess = new Htaccess( resource.getAccessFilePath() );
+    if( !request.headerKeyExists( "Authorization" ) ) {
+      response = new UnauthorizedResponse( resource );
+      response.setOtherHeaders( "WWW-Authenticate", "Basic realm = \"" + htaccess.getAuthName() + "\"");
+      return response;
+    }
+    else if( !htaccess.isAuthorized( request.getHeader( "Authorization" ) ) ) {
+      response = new ForbiddenResponse( resource );
+      return response;
+    }
+    return response;    
+  }
+
+  private static Response runScript( Request request, Resource resource ) throws Exception {
+    Response response = new OKResponse( resource );
+    String command = resource.getAbsolutePath();  
+    ProcessBuilder processBuilder = new ProcessBuilder( command );
+    Map<String,String> env = processBuilder.environment();
+    Map<String,String> headers = request.getHeaders();
+    String value = "";
+    String[] queryString;
+
+    if(request.getUri().contains("?")){
+      queryString = request.getUri().split("?");
+      value = queryString[1];
+      env.put("HTTP_QUERY_STRING",value);
+    }            
+    env.put("HTTP_SERVER_PROTOCOL",request.getHttpVersion());
+
+    for ( String key: headers.keySet() ){
+      value = headers.get( key ).toString();
+      String envpString = "HTTP_" + key.toUpperCase();
+      env.put(envpString, value);
+    }
+    
+    Process process = processBuilder.start();
+    InputStream scriptOutput = process.getInputStream();
+    response.setBody( scriptOutput.readAllBytes() );
+    process.waitFor();
+    if ( process.exitValue() ==  0){
+      return response;
+    }else{
+      return new InternalServerErrorResponse( resource );
+    }
+  }
+
 }

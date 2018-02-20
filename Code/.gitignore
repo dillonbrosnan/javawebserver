@@ -9,7 +9,7 @@
 log.txt
 
 # password stuff #
-*.htaccess
+*_.htaccess
 *.htpasswd
 
 # specs

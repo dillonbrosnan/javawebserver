@@ -29,51 +29,20 @@ public class Worker extends Thread {
   }
 
   public void run() {
-    // try{
-    //   // request = new Request( client.getInputStream() );  
-    //   // request.parse();
-    //   // request.print();
-    //   parseRequest( client.getInputStream() );
-    //   resource = new Resource( request.getUri(), httpdConf, mime);
-    //   response = ResponseFactory.getResponse( request, resource );
-    // } catch ( BadRequestException  e){
-    //   response = new BadRequestResponse( resource );
-    // } catch ( IOException e ) {
-    //   System.out.println(e);
-    //   //response = ResponseFactory.getResponse( request, resource, e );
-    // }
-    
-    // try {      
-    //   response.send( client.getOutputStream() );
-    //   client.close();
-    // } catch ( IOException e){
-    //     System.out.println("CAUGHT IOException in worker response.send(): " + e);
-    // }
     Logger logger = new Logger( httpdConf.getLogFile() );
     try{
       parseRequest( client.getInputStream() );
       resource = new Resource( request.getUri(), httpdConf, mime );
       response = ResponseFactory.getResponse( request, resource);   
-    }
-    catch( IOException e){
-      System.out.println("IOException line 59 worker.java " + e );
+      response.send( client.getOutputStream() );         
+      client.close();
+      logger.write( request, response );
     }
     catch( BadRequestException e){
       response = new BadRequestResponse( resource );
     }
-    try{
-      response.send( client.getOutputStream() );         
-      client.close();
-    }
-    catch( IOException e){
-      System.out.println("IOException line 69 worker.java " + e );
-    }
-
-    try {
-      logger.write( request, response );
-    } 
-    catch ( IOException e ){
-      System.out.println("IOException in Logger" + e );
+     catch( Exception e){
+      response = new InternalServerErrorResponse( resource );
     }
   }
   public void parseRequest( InputStream inputStream ) throws BadRequestException, IOException{

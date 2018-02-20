@@ -82,6 +82,9 @@ public abstract class Response {
   public long getBodyLength(){
     return this.body.length;
   }
+  public int getStatusCode(){
+    return this.statusCode;
+  }
 
   public String toString() {
     if( body != null ) {
