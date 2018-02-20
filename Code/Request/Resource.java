@@ -134,7 +134,12 @@ public class Resource{
 
     tokens = absolutePath.split("\\.");
     extensions = tokens[tokens.length-1];
-    return mime.lookup( extensions );
+    String mimeType = mime.lookup( extensions );  
+    System.out.println(mimeType);
+    if(mimeType == null ){
+      return "text/text";
+    }  
+    return mimeType;
   }
 
   public void print(){

@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 public class Request{
 
@@ -62,8 +63,7 @@ public class Request{
       addToHeaders( line );
       line = reader.readLine();
     }
-    createEnvp();
-    //line = reader.readLine();
+
     if ( hasBody() ){
       storeBody();
     }
@@ -84,7 +84,6 @@ public class Request{
   private void addToHeaders( String headerLine ){
     String[] headerParts = headerLine.split(": ");  
     if(headerParts[HEADER_KEY].equals("Authorization")) {
-      //this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
       String[] authSplit = headerParts[HEADER_VALUE].split( " " );
       this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
     }
@@ -101,18 +100,6 @@ public class Request{
     }
     catch( IOException e ){
       System.out.println( e );
-    }
-  }
-  private void createEnvp(){
-    envp = new String[ headers.size() + 2 ];
-    envp[ 0 ] = "HTTP_SERVER_PROTOCOL = " + getHttpVersion();
-    envp[ 1 ] = "HTTP_QUERY_STRING = " + getUri();
-    int i = 2;
-    for ( String key: headers.keySet() ){
-      String value = headers.get( key ).toString();
-      String envpString = "HTTP_" + key.toUpperCase() + " = " + value;
-      envp[i] = envpString;
-      i++;
     }
   }
   private boolean hasBody(){
@@ -147,6 +134,11 @@ public class Request{
   public boolean headerKeyExists( String key ){
     return headers.containsKey( key );
   }
+
+  public Map<String,String> getHeaders(){
+    return headers;
+  }
+
   public byte[] getBody(){
     return messageBody;
   }
@@ -155,9 +147,6 @@ public class Request{
   }
   public String getModifiedDate(){
     return headers.get( "If-Modified-Since" );
-  }
-  public String[] getEnvp(){
-    return envp;
   }
 
   public String toString() {

@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.lang.Runtime;
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.util.Map;
 
 
 public class ResponseFactory {
@@ -53,13 +54,34 @@ public class ResponseFactory {
         response = new OKResponse( resource );
         if ( resource.isScript() ){
           try{
-            String command = resource.getAbsolutePath();
-            System.out.println( "Command: " + command);
-            Process process = Runtime.getRuntime().exec( command, request.getEnvp() );
+            String command = resource.getAbsolutePath();  
+            ProcessBuilder processBuilder = new ProcessBuilder( command );
+            Map<String,String> env = processBuilder.environment();
+            Map<String,String> headers = request.getHeaders();
+
+            String value = "";
+            String[] queryString;
+            if(request.getUri().contains("?")){
+              queryString = request.getUri().split("?");
+              value = queryString[1];
+              env.put("HTTP_QUERY_STRING",value);
+            }            
+            env.put("HTTP_SERVER_PROTOCOL",request.getHttpVersion());
+
+            for ( String key: headers.keySet() ){
+              value = headers.get( key ).toString();
+              String envpString = "HTTP_" + key.toUpperCase();
+              env.put(envpString, value);
+            }
+            
+
+            Process process = processBuilder.start();
+
+            //Process process = Runtime.getRuntime().exec( command, request.getEnvp() );
             InputStream scriptOutput = process.getInputStream();
             response.setBody( scriptOutput.readAllBytes() );
-            response.setOtherHeaders("Content-Type", "text/html");
-            response.setOtherHeaders("Content-Length", Long.toString( response.getBodyLength() ) );
+            //response.setOtherHeaders("Content-Type", "text/html");
+            //response.setOtherHeaders("Content-Length", Long.toString( response.getBodyLength() ) );
             process.waitFor();
             if ( process.exitValue() ==  0){
               System.out.println("successful script");
