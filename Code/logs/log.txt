@@ -460,3 +460,13 @@ localhost:8080 - null [Tue, 20 Feb 2018 09:19:42 GMT]  "GET /ab/ HTTP/1.1" 401 -
 localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 09:19:45 GMT]  "GET /ab/ HTTP/1.1" 200 162
 localhost:8080 - null [Tue, 20 Feb 2018 09:19:45 GMT]  "GET /favicon.ico HTTP/1.1" 401 -
 localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 09:19:45 GMT]  "GET /favicon.ico HTTP/1.1" 404 -
+localhost:8080 - null [Tue, 20 Feb 2018 11:48:48 GMT]  "GET / HTTP/1.1" 401 -
+localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:48:51 GMT]  "GET / HTTP/1.1" 200 3143
+localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:48:51 GMT]  "GET /js/image-test.js HTTP/1.1" 200 678
+localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:48:51 GMT]  "GET /images/sushi.jpg HTTP/1.1" 200 40183
+localhost:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:48:51 GMT]  "GET /favicon.ico HTTP/1.1" 404 -
+[::1]:8080 - null [Tue, 20 Feb 2018 11:53:25 GMT]  "GET / HTTP/1.1" 401 -
+[::1]:8080 - null [Tue, 20 Feb 2018 11:53:56 GMT]  "GET / HTTP/1.1" 401 -
+[::1]:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:54:11 GMT]  "GET / HTTP/1.1" 200 3143
+[::1]:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 11:54:17 GMT]  "HEAD / HTTP/1.1" 200 3143
+[::1]:8080 - anJvYjoxMjM0 [Tue, 20 Feb 2018 12:46:59 GMT]  "LOCK / HTTP/1.1" 400 -

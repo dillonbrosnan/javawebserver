@@ -35,15 +35,21 @@ public class Worker extends Thread {
       parseRequest( client.getInputStream() );
       resource = new Resource( request.getUri(), httpdConf, mime );
       response = ResponseFactory.getResponse( request, resource);   
-      response.send( client.getOutputStream() );         
-      client.close();
-      logger.write( request, response );
     }
     catch( BadRequestException e){
+      System.out.println( "caught bad request exception" );
       response = new BadRequestResponse( resource );
     }
-    catch( Exception e){
+    catch( IOException e){
       response = new InternalServerErrorResponse( resource );
+    }
+    try{
+       response.send( client.getOutputStream() );
+       client.close();
+       logger.write( request, response );
+    }
+    catch( IOException e ){
+      System.out.println( e );
     }
   }
   
