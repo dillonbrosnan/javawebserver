@@ -1,6 +1,8 @@
 package Request;
+
 import Exceptions.*;
-//TODO: THROW 400 BAD REQUEST
+import Date.*;
+import java.time.LocalDateTime;
 import java.io.BufferedReader;
 import java.io.StringReader;
 import java.io.IOException;
@@ -13,7 +15,7 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-// import java.*;
+import java.util.Map;
 
 public class Request{
 
@@ -22,12 +24,15 @@ public class Request{
   private String httpVersion;
   private String verb;
   private String httpRequest;
-  private InputStream httpRequestStream;
-  private String[] parsedTest;
+  private String requestLine;
+  private FormattedDate date;
+  private InputStream httpRequestStream;  
   private Hashtable<String, String> headers;
   private byte[] messageBody;
   private static final int HEADER_KEY = 0;
   private static final int HEADER_VALUE= 1;
+  private static final int AUTH_KEY = 0;
+  private static final int AUTH_VALUE= 1;
   private static final String[] verbs = {
     "GET", "HEAD", "POST", "PUT", "DELETE"
   };
@@ -38,26 +43,14 @@ public class Request{
 
   public Request( String httpRequest ){
     this.httpRequest = httpRequest;
-    // try{
-    //   parse();
-    // }
-    // catch( IOException ex ){
-    //   //TODO implement 400 response handling
-    //   System.out.println( ex.toString() );
-    // }
   }
 
   public Request( InputStream httpRequestStream ) {
     this.httpRequestStream = httpRequestStream;  
-    // try{
-    //   parse();
-    // }
-    // catch( IOException ex ){
-    //   //TODO implement 400 response handling
-    //   System.out.println( ex.toString() );
-    // }
+    date = new FormattedDate( LocalDateTime.now() );
   }
-  public void parse() throws IOException, ServerException{
+
+  public void parse() throws IOException, BadRequestException{
     BufferedReader reader = new BufferedReader( new InputStreamReader( httpRequestStream, "UTF-8" ) );
     String line;
 
@@ -69,15 +62,15 @@ public class Request{
       addToHeaders( line );
       line = reader.readLine();
     }
-    line = reader.readLine();
+
     if ( hasBody() ){
       storeBody();
     }
   }
 
   private void parseRequestLine( String requestLineParse ) throws BadRequestException{
-    System.out.println(requestLineParse);
     String[] requestLineSubstrings = requestLineParse.split( "\\s" );
+    requestLine = requestLineParse;
 
     if( isVerb( requestLineSubstrings[0] ) ){
       setVerb( requestLineSubstrings[0] );
@@ -85,12 +78,21 @@ public class Request{
     else{
       throw new BadRequestException();
     }
+
     setUri( requestLineSubstrings[1] );
     setHttpVersion( requestLineSubstrings[2] );
   }
+
   private void addToHeaders( String headerLine ){
-    String[] headerParts = headerLine.split(": ");  
-    this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
+    String[] headerParts = headerLine.split(": "); 
+
+    if(headerParts[HEADER_KEY].equals("Authorization")) {
+      String[] authSplit = headerParts[HEADER_VALUE].split( " " );
+      this.headers.put( headerParts[HEADER_KEY], authSplit[AUTH_VALUE] );
+    }
+    else{
+      this.headers.put( headerParts[HEADER_KEY], headerParts[HEADER_VALUE] );
+    }
   }
 
   private void storeBody(){
@@ -103,18 +105,23 @@ public class Request{
       System.out.println( e );
     }
   }
+
   private boolean hasBody(){
     return headers.containsKey( "Content-Length" );
   }
+
   private boolean isVerb( String verb ){
     return Arrays.asList( verbs ).contains( verb ); 
   }
+
   private void setVerb( String verb ){
     this.verb = verb;
   }
+
   private void setUri( String uri ){
     this.uri = uri;
   }
+
   private void setHttpVersion( String httpVersion ){
     this.httpVersion = httpVersion;
   }
@@ -122,11 +129,46 @@ public class Request{
   public String getVerb(){
     return this.verb;
   }
+
   public String getUri(){
     return this.uri;
   }
+
   public String getHttpVersion(){
     return this.httpVersion;
+  }
+
+  public String getHeader( String header ) {
+    return headers.get( header );
+  }
+
+  public boolean headerKeyExists( String key ){
+    return headers.containsKey( key );
+  }
+
+  public Map<String,String> getHeaders(){
+    return headers;
+  }
+
+  public byte[] getBody(){
+    return messageBody;
+  }
+
+  public boolean isModifiedSince(){
+    return headers.get( "If-Modified-Since" ) != null;
+  }
+
+  public String getModifiedDate(){
+    return headers.get( "If-Modified-Since" );
+  }
+
+  public String toString() {
+   
+    String serverLog = getHeader( "Host" ) + 
+      " - " + getHeader( "Authorization" ) + 
+      " " + "[" + date.toString() + "]" + "  \"" + requestLine + "\"";
+
+    return serverLog;
   }
 
   public void print(){

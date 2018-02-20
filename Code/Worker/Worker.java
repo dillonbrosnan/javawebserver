@@ -4,6 +4,7 @@ import ConfigurationReader.*;
 import Request.*;
 import ResponseFactory.*;
 import Exceptions.*;
+import Logger.*;
 
 import java.lang.Thread;
 import java.net.Socket;
@@ -28,23 +29,26 @@ public class Worker extends Thread {
   }
 
   public void run() {
+    Logger logger = new Logger( httpdConf.getLogFile() );
+
     try{
-      request = new Request( client.getInputStream() );  
-      request.parse();
-      resource = new Resource( request.getUri(), httpdConf, mime);
-      response = ResponseFactory.getResponse( request, resource );
-    } catch ( ServerException  e){
-      response = ResponseFactory.getResponse( request, resource, e );
-    } catch ( IOException e ) {
-      System.out.println(e);
-      //response = ResponseFactory.getResponse( request, resource, e );
-    }
-    
-    try {      
-      response.send( client.getOutputStream() );
+      parseRequest( client.getInputStream() );
+      resource = new Resource( request.getUri(), httpdConf, mime );
+      response = ResponseFactory.getResponse( request, resource);   
+      response.send( client.getOutputStream() );         
       client.close();
-    } catch ( IOException e){
-        
+      logger.write( request, response );
     }
+    catch( BadRequestException e){
+      response = new BadRequestResponse( resource );
+    }
+    catch( Exception e){
+      response = new InternalServerErrorResponse( resource );
+    }
+  }
+  
+  public void parseRequest( InputStream inputStream ) throws BadRequestException, IOException{
+    request = new Request( inputStream );
+    request.parse();
   }
 }

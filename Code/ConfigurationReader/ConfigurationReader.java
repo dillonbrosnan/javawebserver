@@ -10,13 +10,12 @@ public abstract class ConfigurationReader {
   private Scanner checkLines;
 
   public ConfigurationReader ( String fileName ) {
-    System.out.println("File name in ConfigurationReader: " + fileName);
     this.file = new File ( fileName );
     try{
       checkLines = new Scanner( file );
     }
     catch(FileNotFoundException e){
-      System.out.println(e);
+      System.out.println( e );
     }
   }
   
@@ -29,11 +28,4 @@ public abstract class ConfigurationReader {
   }
 
   public abstract void load();
-  // public void load(){
-  //   while( hasMoreLines ){
-  //     parseLine( nextLine() );
-  //   }
-  // }
-  // // protected abstract void parseLine();
-
 }

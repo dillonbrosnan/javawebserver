@@ -3,8 +3,14 @@
 
 # configuration files #
 *.conf
-*.vscode
+.vscode
 
+# Log files #
+log.txt
+
+# password stuff #
+*_.htaccess
+*.htpasswd
 
 # specs
 *.pdf

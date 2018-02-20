@@ -17,7 +17,9 @@ public class Logger{
   public void write(Request request, Response response) throws IOException {
     try {
       FileWriter fileWriter = new FileWriter ( this.file, true );
-      fileWriter.write ( "request: " + request.toString() + "\n response: " + response.toString() + "\n" );
+      String log = request.toString() + " " + response.toString() + "\n";
+      System.out.print( log );
+      fileWriter.write ( log );
       fileWriter.flush();
       fileWriter.close();
     } catch ( IOException e ){

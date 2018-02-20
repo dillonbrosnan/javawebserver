@@ -1,6 +1,7 @@
 package Authorization;
 
 import ConfigurationReader.*;
+import Exceptions.*;
 import java.util.HashMap;
 import java.util.Base64;
 import java.nio.charset.Charset;
@@ -12,7 +13,6 @@ public class Htpassword extends ConfigurationReader {
 
   public Htpassword( String filename ) throws IOException {
     super( filename );
-    System.out.println( "Password file: " + filename );
 
     this.passwords = new HashMap<String, String>();
     this.load();
@@ -27,6 +27,7 @@ public class Htpassword extends ConfigurationReader {
   }
 
   public boolean isAuthorized( String authInfo ) {
+
     // authInfo is provided in the header received from the client
     // as a Base64 encoded string.
     String credentials = new String(
@@ -38,7 +39,7 @@ public class Htpassword extends ConfigurationReader {
     String[] tokens = credentials.split( ":" );
 
     // TODO: implement this
-    if( !(this.passwords.containsKey( tokens[0] )) ){
+    if( !(this.passwords.containsKey( tokens[0] ) ) ){
       return false;
     }
     else{
@@ -53,10 +54,10 @@ public class Htpassword extends ConfigurationReader {
     // TODO: implement this - note that the encryption step is provided as a
     // method, below
     String encryptedPassword = encryptClearPassword( password );
-    if( passwords.get( username ) == encryptedPassword ){
+    if( passwords.get( username ).equals( encryptedPassword ) ){
       return true;
     }
-    return false;
+    return false;                         
   }
 
   private String encryptClearPassword( String password ) {
@@ -72,6 +73,8 @@ public class Htpassword extends ConfigurationReader {
     }
   }
   public void load(){
-    
+      while( this.hasMoreLines() ){
+        parseLine( this.nextLine() );
+      }
   }
 }
