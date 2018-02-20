@@ -44,18 +44,17 @@ public class Resource{
     } else if( isAlias( this.uri ) ){    
       absolutePath = httpdConf.getAlias( this.uri );
       this.isAlias = true;
-    } else {
-        temporary += uriSplit[1] + "/";
-        System.out.println(temporary);
-        if( isAlias( temporary )) {
-          absolutePath = httpdConf.getAlias( temporary ) + restOfPath( uriSplit );
-          this.isAlias = true;
-        } else if( httpdConf.getScriptAlias( temporary ) != null ) {
-          absolutePath = httpdConf.getScriptAlias( temporary ) + restOfPath( uriSplit );
-          this.isScript = true;
-        } else {
-          resolveUnmodUri();
-        }      
+    } else {      
+      temporary += uriSplit[0] + "/";
+      if( isAlias( temporary )) {
+        absolutePath = httpdConf.getAlias( temporary ) + restOfPath( uriSplit );
+        this.isAlias = true;
+      } else if( httpdConf.getScriptAlias( temporary ) != null ) {
+        absolutePath = httpdConf.getScriptAlias( temporary ) + restOfPath( uriSplit );
+        this.isScript = true;
+      } else {
+        resolveUnmodUri();
+      }      
     }
     if ( isDirectory ) {
       appendDirIndex();

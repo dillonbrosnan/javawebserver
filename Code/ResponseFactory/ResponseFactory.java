@@ -37,17 +37,14 @@ public class ResponseFactory {
       }
     }
 
-    if( !requestVerb.equals( "PUT" ) && !resource.exists() ){
-<<<<<<< HEAD
-      
-=======
->>>>>>> 9a9130d2b56c717612124c2f05b1c9b1498893c0
+    if( !requestVerb.equals( "PUT" ) && !requestVerb.equals( "POST" ) && !resource.exists() ){
       return new FileNotFoundResponse( resource );
     }
 
     if( requestVerb.equals( "GET" ) || requestVerb.equals( "HEAD" ) || 
       requestVerb.equals( "POST" ) ){
-      if( requestVerb.equals( "POST" ) ){
+      if( requestVerb.equals( "POST" ) && !resource.exists() ){
+        System.out.println( "POST" );
         Files.write( filePath, request.getBody() );
       }
 
@@ -80,16 +77,11 @@ public class ResponseFactory {
 
     else if( requestVerb.equals( "PUT" ) ){
       Files.write( filePath, request.getBody() );
-      // File file = new File( resource.getAbsolutePath() );
-      // FileOutputStream fOS = new FileOutputStream( file );
-      // fOS.write( request.getBody() );
-      // fOS.close();
       if( Files.exists( filePath ) ){
         response = new CreatedResponse( resource );
       } else {
         response = new InternalServerErrorResponse( resource );
-      }     
-
+      } 
       response.setOtherHeaders( "Location", request.getUri() );
     }
 
@@ -139,7 +131,7 @@ public class ResponseFactory {
     }
     
     Process process = processBuilder.start();
-    if( request.getVerb() == "PUT" || request.getVerb() == "POST" ){
+    if( request.getVerb().equals( "PUT" ) || request.getVerb().equals( "POST" ) ){
       OutputStream scriptInput = process.getOutputStream();
       scriptInput.write( request.getBody() ); 
       scriptInput.flush();
