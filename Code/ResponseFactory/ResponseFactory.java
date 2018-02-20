@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.lang.Runtime;
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 
@@ -75,7 +76,14 @@ public class ResponseFactory {
 
     else if( requestVerb.equals( "PUT" ) ){
       Files.write( filePath, request.getBody() );
-      response = new CreatedResponse( resource );
+      // File file = new File( resource.getAbsolutePath() );
+      // FileOutputStream fOS = new FileOutputStream( file );
+      // fOS.write( request.getBody() );
+      if( Files.exists( filePath ) ){
+        response = new CreatedResponse( resource );
+      } else {
+        response = new InternalServerErrorResponse( resource );
+      }     
       response.setOtherHeaders( "Location", request.getUri() );
     }
 
@@ -125,6 +133,11 @@ public class ResponseFactory {
     }
     
     Process process = processBuilder.start();
+    if( request.getVerb() == "PUT" || request.getVerb() == "POST" ){
+      OutputStream scriptInput = process.getOutputStream();
+      scriptInput.write( request.getBody() ); 
+      scriptInput.flush();
+    }
     InputStream scriptOutput = process.getInputStream();
     response.setBody( scriptOutput.readAllBytes() );
     process.waitFor();

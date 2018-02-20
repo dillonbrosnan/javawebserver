@@ -41,8 +41,12 @@ public class Resource{
 
     if( uri.equals( "/" )) {
       absolutePath = httpdConf.getDocumentRoot();
+    } else if( isAlias( this.uri ) ){    
+      absolutePath = httpdConf.getAlias( this.uri );
+      this.isAlias = true;
     } else {
-        temporary += uriSplit[0] + "/";
+        temporary += uriSplit[1] + "/";
+        System.out.println(temporary);
         if( isAlias( temporary )) {
           absolutePath = httpdConf.getAlias( temporary ) + restOfPath( uriSplit );
           this.isAlias = true;

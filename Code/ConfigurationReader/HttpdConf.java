@@ -27,7 +27,7 @@ public class HttpdConf extends ConfigurationReader {
   private void storeValues() {
     if( this.configuration[CONF_KEY].contains( "ScriptAlias" )) {
       scriptAliases.put(this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE]);
-    } else if( this.configuration[CONF_KEY] == "Alias") {
+    } else if( this.configuration[CONF_KEY].equals("Alias") ) {
       aliases.put( this.configuration[SCRIPT_KEY], this.configuration[SCRIPT_VALUE] );
     } else {
       everythingElse.put( this.configuration[CONF_KEY], this.configuration[CONF_VALUE] );
