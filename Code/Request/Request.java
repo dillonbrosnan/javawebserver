@@ -66,19 +66,15 @@ public class Request{
     if ( hasBody() ){
       storeBody();
     }
-  }
-
-  private void parseRequestLine( String requestLineParse ) throws BadRequestException{
-    String[] requestLineSubstrings = requestLineParse.split( "\\s" );
-    requestLine = requestLineParse;
-
-    if( isVerb( requestLineSubstrings[0] ) ){
-      setVerb( requestLineSubstrings[0] );
-    }
-    else{
+    if( !isVerb( this.verb ) ){
       throw new BadRequestException();
     }
+  }
 
+  private void parseRequestLine( String requestLineParse ) {
+    String[] requestLineSubstrings = requestLineParse.split( "\\s" );
+    requestLine = requestLineParse;
+    setVerb( requestLineSubstrings[0] );
     setUri( requestLineSubstrings[1] );
     setHttpVersion( requestLineSubstrings[2] );
   }
