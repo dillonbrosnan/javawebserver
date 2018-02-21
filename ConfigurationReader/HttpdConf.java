@@ -9,8 +9,8 @@ public class HttpdConf extends ConfigurationReader {
   private Map<String,String> everythingElse = new Hashtable<String,String>();
   private String configuration[], line;
 
-  private int DEFAULT_PORT, CONF_KEY = 0, CONF_VALUE = 1, SCRIPT_KEY = 1, SCRIPT_VALUE = 2;
-
+  private int CONF_KEY = 0, CONF_VALUE = 1, SCRIPT_KEY = 1, SCRIPT_VALUE = 2;
+  private String DEFAULT_PORT = "8080";
   public HttpdConf( String fileName ) {
     super( fileName );
   }
@@ -21,6 +21,7 @@ public class HttpdConf extends ConfigurationReader {
       line = line.replace( "\"", "" );
       this.configuration = line.split( " " );
       storeValues();
+      checkDefault();
     }      
   }
 
@@ -32,6 +33,18 @@ public class HttpdConf extends ConfigurationReader {
     } else {
       everythingElse.put( this.configuration[CONF_KEY], this.configuration[CONF_VALUE] );
     } 
+  }
+
+  private void checkDefault() {
+    if( !everythingElse.contains( "Listen" ) ){
+      everythingElse.put( "Listen", DEFAULT_PORT );
+    }
+    if( !everythingElse.contains( "DirectoryIndex" ) ){
+      everythingElse.put( "DirectoryIndex", "index.html" );
+    }
+    if( !everythingElse.contains( "AccessFileName" ) ){
+      everythingElse.put( "AccessFileName", ".htaccess" );
+    }
   }
 
   public String getServerRoot() {

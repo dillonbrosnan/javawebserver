@@ -17,7 +17,7 @@ public class InternalServerErrorResponse extends Response{
   }
   
   public void send( OutputStream out ) throws IOException{
-    String body = "<html><head><title>500 File Not Found</title></head><body>" 
+    String body = "<html><head><title>500 Internal Server Error</title></head><body>" 
       + "<h1>500 - Internal Server Error</h1></body></html>";
     BufferedWriter output = new BufferedWriter( new OutputStreamWriter ( out ) );
 

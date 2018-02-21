@@ -95,7 +95,7 @@ public class Request{
     try{
       int bodySize = Integer.parseInt( headers.get( "Content-Length" ) );
       messageBody = new byte[bodySize];
-      httpRequestStream.read( messageBody, 0, bodySize );
+      httpRequestStream.read( messageBody );
     }
     catch( IOException e ){
       System.out.println( e );

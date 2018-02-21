@@ -1,4 +1,4 @@
-AuthUserFile "/mnt/c/Users/abram/OneDrive/Documents/Spring2018/667/web-server-dylandillon/Code/public_html/.htpasswd"
+AuthUserFile "/mnt/c/Users/abram/OneDrive/Documents/Spring2018/667/web-server-dylandillon/public_html/.htpasswd"
 AuthType Basic
 AuthName "I Challenge You"
 Require valid-user
