@@ -36,13 +36,13 @@ public class HttpdConf extends ConfigurationReader {
   }
 
   private void checkDefault() {
-    if( !everythingElse.contains( "Listen" ) ){
+    if( !everythingElse.containsKey( "Listen" ) ){
       everythingElse.put( "Listen", DEFAULT_PORT );
     }
-    if( !everythingElse.contains( "DirectoryIndex" ) ){
+    if( !everythingElse.containsKey( "DirectoryIndex" ) ){
       everythingElse.put( "DirectoryIndex", "index.html" );
     }
-    if( !everythingElse.contains( "AccessFileName" ) ){
+    if( !everythingElse.containsKey( "AccessFileName" ) ){
       everythingElse.put( "AccessFileName", ".htaccess" );
     }
   }
